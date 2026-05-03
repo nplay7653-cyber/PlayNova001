@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Nova - Tu acceso a otro nivel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050a;--surface:#0d0d1a;--surface2:#12121f;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--text:#f0f0f5;--muted:#7a7a9a;--accent:#e63329;--gold:#f5a623;--netflix:#e50914;--hbo:#8B00FF;--disney:#0099e5;--spotify:#1DB954;--canva:#7D2AE8;--chatgpt:#74aa9c;--directv:#0099d8;--crunch:#f47521;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(5,5,10,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:2px;}
+.nav-logo span{color:var(--accent);}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-actions{display:flex;gap:.75rem;}
+.btn{padding:.5rem 1.25rem;border-radius:6px;font-size:.85rem;font-family:'Exo 2',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;text-transform:uppercase;border:none;}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#c0261e;transform:translateY(-1px);}
+.btn-gold{background:var(--gold);color:#1a0f00;}
+.btn-gold:hover{background:#e6960f;}
+.btn-sm{padding:.4rem .9rem;font-size:.75rem;}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(230,51,41,0.15) 0%,transparent 70%),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(245,166,35,0.07) 0%,transparent 60%);pointer-events:none;}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,0.3) 0%,transparent 100%),radial-gradient(1px 1px at 30% 60%,rgba(255,255,255,0.2) 0%,transparent 100%),radial-gradient(1px 1px at 60% 10%,rgba(255,255,255,0.3) 0%,transparent 100%),radial-gradient(1px 1px at 80% 40%,rgba(255,255,255,0.15) 0%,transparent 100%),radial-gradient(1px 1px at 20% 85%,rgba(255,255,255,0.2) 0%,transparent 100%);pointer-events:none;}
+.hero-logo-wrapper{position:relative;margin-bottom:2rem;animation:fadeUp .8s ease both;}
+.hero-logo-np{font-family:'Rajdhani',sans-serif;font-size:clamp(5rem,15vw,10rem);font-weight:700;line-height:1;background:linear-gradient(135deg,#e63329 30%,#f5a623 70%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;}
+.hero-logo-np::after{content:'★';position:absolute;top:.1em;right:-.25em;font-size:.35em;color:var(--gold);-webkit-text-fill-color:var(--gold);}
+.hero-orbit{position:absolute;inset:-10px;border:2px solid transparent;border-top-color:var(--gold);border-radius:50%;animation:orbit 4s linear infinite;}
+@keyframes orbit{to{transform:rotate(360deg);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+.hero-brand{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:600;letter-spacing:6px;text-transform:uppercase;animation:fadeUp .8s .2s ease both;}
+.hero-brand span{color:var(--accent);}
+.hero-tagline{font-size:.95rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-top:.5rem;animation:fadeUp .8s .35s ease both;}
+.hero-platforms{display:flex;gap:1.5rem;align-items:center;margin-top:2rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .5s ease both;}
+.hero-platforms span{font-size:.85rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:.7;}
+.hero-cta{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s .65s ease both;}
+.wrap{max-width:1200px;margin:0 auto;padding:5rem 2rem;}
+.sec-divider{border-top:1px solid var(--border);}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:.5rem;}
+.section-title span{color:var(--accent);}
+.section-sub{color:var(--muted);font-size:.9rem;letter-spacing:1px;margin-bottom:3rem;}
+.service-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.stab{padding:.5rem 1.25rem;border-radius:6px;font-size:.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:all .2s;}
+.stab:hover{border-color:var(--border2);color:var(--text);}
+.stab.active{color:#fff;border-color:transparent;}
+.stab[data-svc="netflix"].active{background:var(--netflix);}
+.stab[data-svc="hbo"].active{background:var(--hbo);}
+.stab[data-svc="disney"].active{background:var(--disney);}
+.stab[data-svc="spotify"].active{background:var(--spotify);}
+.stab[data-svc="canva"].active{background:var(--canva);}
+.stab[data-svc="chatgpt"].active{background:var(--chatgpt);}
+.stab[data-svc="directv"].active{background:var(--directv);}
+.stab[data-svc="crunchyroll"].active{background:var(--crunch);}
+.service-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem;}
+.service-grid.active{display:grid;}
+.plan-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:all .25s;position:relative;overflow:hidden;}
+.plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .25s;}
+.plan-card:hover{border-color:var(--border2);transform:translateY(-3px);}
+.plan-card:hover::before{opacity:1;}
+.plan-card[data-svc="netflix"]::before{background:var(--netflix);}
+.plan-card[data-svc="hbo"]::before{background:var(--hbo);}
+.plan-card[data-svc="disney"]::before{background:var(--disney);}
+.plan-card[data-svc="spotify"]::before{background:var(--spotify);}
+.plan-card[data-svc="canva"]::before{background:var(--canva);}
+.plan-card[data-svc="chatgpt"]::before{background:var(--chatgpt);}
+.plan-card[data-svc="directv"]::before{background:var(--directv);}
+.plan-card[data-svc="crunchyroll"]::before{background:var(--crunch);}
+.plan-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:.75rem;}
+.badge-netflix{background:rgba(229,9,20,.15);color:#ff6b6b;}
+.badge-hbo{background:rgba(139,0,255,.15);color:#b87fff;}
+.badge-disney{background:rgba(0,153,229,.15);color:#6ac8f0;}
+.badge-spotify{background:rgba(29,185,84,.15);color:#1DB954;}
+.badge-canva{background:rgba(125,42,232,.15);color:#b280ff;}
+.badge-chatgpt{background:rgba(116,170,156,.15);color:var(--chatgpt);}
+.badge-directv{background:rgba(0,153,216,.15);color:#6ac8f0;}
+.badge-crunchyroll{background:rgba(244,117,33,.15);color:#ffaa70;}
+.plan-name{font-size:1rem;font-weight:700;margin-bottom:.35rem;}
+.plan-desc{font-size:.8rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5;}
+.plan-price{display:flex;align-items:baseline;gap:.35rem;margin-bottom:.75rem;}
+.plan-price .currency{font-size:.85rem;color:var(--muted);}
+.plan-price .amount{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;line-height:1;}
+.plan-price .period{font-size:.75rem;color:var(--muted);}
+.plan-points{font-size:.75rem;color:var(--gold);margin-bottom:1rem;}
+.plan-points::before{content:'★ ';}
+.plan-buy{width:100%;padding:.6rem;border-radius:6px;font-family:'Exo 2',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:none;transition:all .2s;text-decoration:none;display:block;text-align:center;background:var(--accent);color:#fff;}
+.plan-buy:hover{opacity:.85;transform:translateY(-1px);}
+.plan-buy.gold{background:var(--gold);color:#1a0f00;}
+.combo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;}
+.combo-card{background:var(--surface);border:1px solid rgba(245,166,35,.2);border-radius:14px;padding:1.75rem;position:relative;overflow:hidden;transition:all .25s;}
+.combo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));}
+.combo-card:hover{border-color:rgba(245,166,35,.4);transform:translateY(-3px);}
+.combo-tag{display:inline-block;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.2);color:var(--gold);font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:1rem;}
+.combo-name{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:.5rem;}
+.combo-services{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+.csvc{font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:4px;}
+.combo-pricing{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.35rem;}
+.combo-price-new{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:var(--gold);}
+.combo-price-old{font-size:.9rem;color:var(--muted);text-decoration:line-through;}
+.combo-save{font-size:.75rem;color:var(--spotify);margin-bottom:.5rem;}
+.combo-pts{font-size:.75rem;color:var(--gold);margin-bottom:1.25rem;}
+.combo-pts::before{content:'★ ';}
+.puntos-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.puntos-how h3{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:1rem;}
+.puntos-step{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;}
+.step-num{width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;}
+.step-text{font-size:.9rem;color:var(--muted);line-height:1.6;}
+.step-text strong{color:var(--text);}
+.rewards-list{display:flex;flex-direction:column;gap:.75rem;}
+.reward-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.reward-name{font-weight:700;font-size:.9rem;}
+.reward-desc{font-size:.75rem;color:var(--muted);margin-top:2px;}
+.reward-cost{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold);white-space:nowrap;}
+.reward-cost small{font-size:.7rem;color:var(--muted);font-family:'Exo 2',sans-serif;font-weight:400;}
+.referral-box{background:var(--surface);border:1px solid rgba(245,166,35,.2);border-radius:14px;padding:2rem;margin-top:2rem;}
+.referral-box h3{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:.5rem;}
+.referral-how{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-top:1.5rem;}
+.referral-step{background:var(--surface2);border-radius:10px;padding:1.25rem;text-align:center;}
+.referral-step .icon{font-size:1.5rem;margin-bottom:.5rem;}
+.referral-step .label{font-size:.8rem;font-weight:700;margin-bottom:.25rem;}
+.referral-step .desc{font-size:.75rem;color:var(--muted);line-height:1.5;}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface2);border:1px solid var(--border2);border-radius:16px;padding:2.5rem;width:100%;max-width:440px;position:relative;max-height:90vh;overflow-y:auto;}
+.modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:1px;margin-bottom:.25rem;}
+.modal-title span{color:var(--accent);}
+.modal-sub{font-size:.8rem;color:var(--muted);margin-bottom:2rem;}
+.modal-tabs{display:flex;margin-bottom:2rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.mtab{flex:1;padding:.6rem;text-align:center;font-size:.85rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--muted);transition:all .2s;}
+.mtab.active{background:var(--accent);color:#fff;}
+.form-group{margin-bottom:1.25rem;}
+.form-label{font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem;}
+.form-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Exo 2',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--accent);}
+.form-optional{font-size:.7rem;color:var(--muted);margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);}
+.form-error{font-size:.75rem;color:#ff6b6b;margin-top:.5rem;}
+.form-success{font-size:.75rem;color:var(--spotify);margin-top:.5rem;}
+#dashboard,#clientDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);overflow-y:auto;}
+#dashboard.open,#clientDash.open{display:block;}
+.dash-header{background:var(--surface2);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.dash-title{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;}
+.dash-body{max-width:1200px;margin:0 auto;padding:2rem;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center;}
+.stat-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem;}
+.stat-value{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;}
+.stat-value.green{color:var(--spotify);}
+.stat-value.red{color:var(--accent);}
+.stat-value.gold{color:var(--gold);}
+.dash-section{margin-bottom:2.5rem;}
+.dash-section-title{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:.5rem;}
+.data-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+.data-table th{text-align:left;padding:.75rem 1rem;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);}
+.data-table td{padding:.75rem 1rem;border-bottom:1px solid var(--border);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tbody tr:hover{background:var(--surface);}
+.tag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;}
+.tag-green{background:rgba(29,185,84,.15);color:#1DB954;}
+.tag-gold{background:rgba(245,166,35,.15);color:var(--gold);}
+.apf{display:flex;gap:.75rem;flex-wrap:wrap;align-items:flex-end;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem;}
+.apf .form-group{margin:0;flex:1;min-width:130px;}
+.dash-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;}
+.dash-tab{padding:.45rem 1rem;border-radius:6px;font-size:.8rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:all .2s;}
+.dash-tab.active{background:var(--accent);color:#fff;border-color:transparent;}
+.dash-panel{display:none;}
+.dash-panel.active{display:block;}
+.points-badge{display:flex;align-items:center;gap:.5rem;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:8px;padding:.4rem 1rem;font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);}
+.ref-code-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;color:var(--gold);letter-spacing:3px;text-align:center;cursor:pointer;transition:border-color .2s;}
+.ref-code-box:hover{border-color:rgba(245,166,35,.4);}
+footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--border);color:var(--muted);font-size:.8rem;letter-spacing:1px;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@media(max-width:768px){nav{padding:.75rem 1rem;}.nav-links{display:none;}.puntos-grid{grid-template-columns:1fr;}.modal{padding:1.75rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">PLAY <span>NOVA</span></div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#combos">Combos</a>
+    <a href="#puntos">Puntos</a>
+    <a href="#referidos">Referidos</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline" onclick="openModal('login')">Ingresar</button>
+    <button class="btn btn-primary" onclick="openModal('register')">Registrarse</button>
+  </div>
+</nav>
+
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="stars"></div>
+  <div class="hero-logo-wrapper">
+    <div class="hero-orbit"></div>
+    <div class="hero-logo-np">NP</div>
+  </div>
+  <div class="hero-brand">PLAY <span>NOVA</span></div>
+  <p class="hero-tagline">Tu acceso a otro nivel de entretenimiento</p>
+  <div class="hero-platforms">
+    <span style="color:var(--netflix)">NETFLIX</span><span style="color:var(--muted)">|</span>
+    <span style="color:var(--hbo)">HBO</span><span style="color:var(--muted)">|</span>
+    <span style="color:var(--disney)">DISNEY+</span><span style="color:var(--muted)">|</span>
+    <span style="color:var(--spotify)">SPOTIFY</span><span style="color:var(--muted)">|</span>
+    <span>Y MÁS</span>
+  </div>
+  <div class="hero-cta">
+    <a href="#servicios" class="btn btn-primary" style="padding:.75rem 2rem;font-size:.95rem;text-decoration:none">Ver Precios</a>
+    <a href="#combos" class="btn btn-gold" style="padding:.75rem 2rem;font-size:.95rem;text-decoration:none">Ver Combos</a>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="wrap sec-divider">
+  <div class="section-title">Nuestros <span>Servicios</span></div>
+  <p class="section-sub">Precios competitivos · Renovable · Soporte WhatsApp · Gana puntos en cada compra</p>
+  <div class="service-tabs">
+    <div class="stab active" data-svc="netflix" onclick="setTab('netflix')">Netflix</div>
+    <div class="stab" data-svc="hbo" onclick="setTab('hbo')">HBO Max</div>
+    <div class="stab" data-svc="disney" onclick="setTab('disney')">Disney+</div>
+    <div class="stab" data-svc="chatgpt" onclick="setTab('chatgpt')">ChatGPT</div>
+    <div class="stab" data-svc="canva" onclick="setTab('canva')">Canva</div>
+    <div class="stab" data-svc="spotify" onclick="setTab('spotify')">Spotify</div>
+    <div class="stab" data-svc="directv" onclick="setTab('directv')">DirecTV</div>
+    <div class="stab" data-svc="crunchyroll" onclick="setTab('crunchyroll')">Crunchyroll</div>
+  </div>
+
+  <div class="service-grid active" id="grid-netflix">
+    <div class="plan-card" data-svc="netflix"><span class="plan-badge badge-netflix">Netflix</span><div class="plan-name">Internacional · Completo</div><div class="plan-desc">5 perfiles · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">48</span><span class="period">/mes</span></div><div class="plan-points">Gana 48 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Completo%205%20perfiles%20S%2F48" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="netflix"><span class="plan-badge badge-netflix">Netflix</span><div class="plan-name">Internacional · Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">12</span><span class="period">/mes</span></div><div class="plan-points">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Perfil%20S%2F12" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="netflix"><span class="plan-badge badge-netflix">Netflix · Xtreme</span><div class="plan-name">1 Perfil Xtreme Tec</div><div class="plan-desc">1 perfil · Renovable · Xtreme</div><div class="plan-price"><span class="currency">S/</span><span class="amount">12</span><span class="period">/mes</span></div><div class="plan-points">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%201%20Perfil%20Xtreme%20Tec%20S%2F12" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-hbo">
+    <div class="plan-card" data-svc="hbo"><span class="plan-badge badge-hbo">HBO Max</span><div class="plan-name">Estándar · Completo</div><div class="plan-desc">5 perfiles · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">35</span><span class="period">/mes</span></div><div class="plan-points">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Max%20Est%C3%A1ndar%20Completo%20S%2F35" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="hbo"><span class="plan-badge badge-hbo">HBO Max</span><div class="plan-name">1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">6</span><span class="period">/mes</span></div><div class="plan-points">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%201%20Perfil%20S%2F6" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="hbo"><span class="plan-badge badge-hbo">HBO Max · Premium</span><div class="plan-name">Platino · Completo</div><div class="plan-desc">5 perfiles · No renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">20</span><span class="period">/mes</span></div><div class="plan-points">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Max%20Platino%20Completo%20S%2F20" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-disney">
+    <div class="plan-card" data-svc="disney"><span class="plan-badge badge-disney">Disney+</span><div class="plan-name">Estándar · Completo</div><div class="plan-desc">7 perfiles · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">40</span><span class="period">/mes</span></div><div class="plan-points">Gana 40 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Est%C3%A1ndar%20Completo%20S%2F40" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="disney"><span class="plan-badge badge-disney">Disney+</span><div class="plan-name">1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">6</span><span class="period">/mes</span></div><div class="plan-points">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%201%20Perfil%20S%2F6" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="disney"><span class="plan-badge badge-disney">Disney+ · ESPN</span><div class="plan-name">Premium ESPN · Completo</div><div class="plan-desc">7 perfiles · Renovable · +ESPN</div><div class="plan-price"><span class="currency">S/</span><span class="amount">61</span><span class="period">/mes</span></div><div class="plan-points">Gana 61 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Completo%20S%2F61" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="disney"><span class="plan-badge badge-disney">Disney+ · ESPN</span><div class="plan-name">Premium ESPN · Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">10</span><span class="period">/mes</span></div><div class="plan-points">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Perfil%20S%2F10" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="disney"><span class="plan-badge badge-disney">Disney+ · TV</span><div class="plan-name">Premium ESPN · Solo TV</div><div class="plan-desc">1 perfil · Renovable · Solo TV</div><div class="plan-price"><span class="currency">S/</span><span class="amount">10</span><span class="period">/mes</span></div><div class="plan-points">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Solo%20TV%20S%2F10" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-chatgpt">
+    <div class="plan-card" data-svc="chatgpt"><span class="plan-badge badge-chatgpt">ChatGPT</span><div class="plan-name">Go · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">15</span><span class="period">/mes</span></div><div class="plan-points">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Go%201%20Perfil%20S%2F15" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="chatgpt"><span class="plan-badge badge-chatgpt">ChatGPT · Pro</span><div class="plan-name">Pro · 1 Perfil</div><div class="plan-desc">1 perfil · No renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">30</span><span class="period">/mes</span></div><div class="plan-points">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Pro%201%20Perfil%20S%2F30" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-canva">
+    <div class="plan-card" data-svc="canva"><span class="plan-badge badge-canva">Canva · 1M</span><div class="plan-name">1 Mes · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">10</span><span class="period">/mes</span></div><div class="plan-points">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%201%20Mes%20S%2F10" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="canva"><span class="plan-badge badge-canva">Canva · 3M</span><div class="plan-name">3 Meses · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">15</span><span class="period">/3 meses</span></div><div class="plan-points">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%203%20Meses%20S%2F15" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="canva"><span class="plan-badge badge-canva">Canva · 6M</span><div class="plan-name">6 Meses · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">20</span><span class="period">/6 meses</span></div><div class="plan-points">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%206%20Meses%20S%2F20" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="canva"><span class="plan-badge badge-canva">Canva · 12M</span><div class="plan-name">12 Meses · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable · Anual</div><div class="plan-price"><span class="currency">S/</span><span class="amount">30</span><span class="period">/año</span></div><div class="plan-points">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%2012%20Meses%20S%2F30" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-spotify">
+    <div class="plan-card" data-svc="spotify"><span class="plan-badge badge-spotify">Spotify</span><div class="plan-name">Individual · 1 Mes</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">12</span><span class="period">/mes</span></div><div class="plan-points">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%201%20Mes%20S%2F12" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="spotify"><span class="plan-badge badge-spotify">Spotify · 3M</span><div class="plan-name">Individual · 3 Meses</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">25</span><span class="period">/3 meses</span></div><div class="plan-points">Gana 25 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%203%20Meses%20S%2F25" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="spotify"><span class="plan-badge badge-spotify">Spotify · Familiar</span><div class="plan-name">Familiar · 1 Mes</div><div class="plan-desc">6 perfiles · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">35</span><span class="period">/mes</span></div><div class="plan-points">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Familiar%201%20Mes%20S%2F35" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-directv">
+    <div class="plan-card" data-svc="directv"><span class="plan-badge badge-directv">DirecTV GO</span><div class="plan-name">DirecTV GO · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable · Solo TV</div><div class="plan-price"><span class="currency">S/</span><span class="amount">20</span><span class="period">/mes</span></div><div class="plan-points">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20DirecTV%20GO%201%20Perfil%20S%2F20" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+
+  <div class="service-grid" id="grid-crunchyroll">
+    <div class="plan-card" data-svc="crunchyroll"><span class="plan-badge badge-crunchyroll">Crunchyroll</span><div class="plan-name">Perfil · 1 Perfil</div><div class="plan-desc">1 perfil · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">5</span><span class="period">/mes</span></div><div class="plan-points">Gana 5 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Perfil%201%20Perfil%20S%2F5" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+    <div class="plan-card" data-svc="crunchyroll"><span class="plan-badge badge-crunchyroll">Crunchyroll</span><div class="plan-name">Completo · 5 Perfiles</div><div class="plan-desc">5 perfiles · Renovable</div><div class="plan-price"><span class="currency">S/</span><span class="amount">15</span><span class="period">/mes</span></div><div class="plan-points">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Completo%205%20Perfiles%20S%2F15" target="_blank" class="plan-buy">Comprar por WhatsApp</a></div>
+  </div>
+</section>
+
+<!-- COMBOS -->
+<section id="combos" class="wrap sec-divider">
+  <div class="section-title">Combos <span>Nova</span></div>
+  <p class="section-sub">Más servicios · Mejor precio · Más puntos de una sola vez</p>
+  <div class="combo-grid">
+    <div class="combo-card">
+      <div class="combo-tag">🔥 Más popular</div>
+      <div class="combo-name">Nova Básico</div>
+      <div class="combo-services">
+        <span class="csvc" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span>
+        <span class="csvc" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify Individual</span>
+      </div>
+      <div class="combo-pricing"><span class="combo-price-new">S/ 20</span><span class="combo-price-old">S/ 24</span></div>
+      <div class="combo-save">✓ Ahorras S/ 4 al mes</div>
+      <div class="combo-pts">Gana 20 puntos con este combo</div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20el%20Combo%20Nova%20B%C3%A1sico%20(Netflix%20Perfil%20%2B%20Spotify)%20S%2F20" target="_blank" class="plan-buy gold">Comprar por WhatsApp</a>
+    </div>
+    <div class="combo-card">
+      <div class="combo-tag">🎬 Entretenimiento</div>
+      <div class="combo-name">Nova Entretenimiento</div>
+      <div class="combo-services">
+        <span class="csvc" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span>
+        <span class="csvc" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ Perfil</span>
+      </div>
+      <div class="combo-pricing"><span class="combo-price-new">S/ 16</span><span class="combo-price-old">S/ 18</span></div>
+      <div class="combo-save">✓ Ahorras S/ 2 al mes</div>
+      <div class="combo-pts">Gana 16 puntos con este combo</div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20el%20Combo%20Nova%20Entretenimiento%20(Netflix%20%2B%20Disney%2B)%20S%2F16" target="_blank" class="plan-buy gold">Comprar por WhatsApp</a>
+    </div>
+    <div class="combo-card">
+      <div class="combo-tag">👑 Premium</div>
+      <div class="combo-name">Nova Premium</div>
+      <div class="combo-services">
+        <span class="csvc" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span>
+        <span class="csvc" style="background:rgba(139,0,255,.15);color:#b87fff">HBO Perfil</span>
+        <span class="csvc" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span>
+      </div>
+      <div class="combo-pricing"><span class="combo-price-new">S/ 26</span><span class="combo-price-old">S/ 30</span></div>
+      <div class="combo-save">✓ Ahorras S/ 4 al mes</div>
+      <div class="combo-pts">Gana 26 puntos con este combo</div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20el%20Combo%20Nova%20Premium%20(Netflix%20%2B%20HBO%20%2B%20Spotify)%20S%2F26" target="_blank" class="plan-buy gold">Comprar por WhatsApp</a>
+    </div>
+    <div class="combo-card">
+      <div class="combo-tag">🌟 Todo incluido</div>
+      <div class="combo-name">Nova Total</div>
+      <div class="combo-services">
+        <span class="csvc" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span>
+        <span class="csvc" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span>
+        <span class="csvc" style="background:rgba(139,0,255,.15);color:#b87fff">HBO</span>
+        <span class="csvc" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span>
+      </div>
+      <div class="combo-pricing"><span class="combo-price-new">S/ 31</span><span class="combo-price-old">S/ 36</span></div>
+      <div class="combo-save">✓ Ahorras S/ 5 al mes</div>
+      <div class="combo-pts">Gana 31 puntos con este combo</div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20el%20Combo%20Nova%20Total%20(Netflix%20%2B%20Disney%2B%20%2B%20HBO%20%2B%20Spotify)%20S%2F31" target="_blank" class="plan-buy gold">Comprar por WhatsApp</a>
+    </div>
+    <div class="combo-card">
+      <div class="combo-tag">🎨 Creativo</div>
+      <div class="combo-name">Nova Creativo</div>
+      <div class="combo-services">
+        <span class="csvc" style="background:rgba(125,42,232,.15);color:#b280ff">Canva 1 Mes</span>
+        <span class="csvc" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify Individual</span>
+      </div>
+      <div class="combo-pricing"><span class="combo-price-new">S/ 18</span><span class="combo-price-old">S/ 22</span></div>
+      <div class="combo-save">✓ Ahorras S/ 4 al mes</div>
+      <div class="combo-pts">Gana 18 puntos con este combo</div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20el%20Combo%20Nova%20Creativo%20(Canva%20%2B%20Spotify)%20S%2F18" target="_blank" class="plan-buy gold">Comprar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- PUNTOS -->
+<section id="puntos" class="wrap sec-divider">
+  <div class="section-title">Sistema de <span>Puntos</span></div>
+  <p class="section-sub">Compra · Acumula · Canjea gratis · Sin expiración</p>
+  <div class="puntos-grid">
+    <div class="puntos-how">
+      <h3>¿Cómo funciona?</h3>
+      <div class="puntos-step"><div class="step-num">1</div><div class="step-text"><strong>Regístrate gratis</strong> — Al hacer tu primera compra recibes <strong style="color:var(--gold)">+30 puntos de bienvenida</strong> automáticamente.</div></div>
+      <div class="puntos-step"><div class="step-num">2</div><div class="step-text"><strong>Compra y acumula</strong> — Cada sol gastado = 1 punto. Netflix S/12 = 12 pts. Los combos también suman.</div></div>
+      <div class="puntos-step"><div class="step-num">3</div><div class="step-text"><strong>Invita amigos</strong> — Comparte tu código único. Cuando tu amigo haga su primera compra, <strong style="color:var(--gold)">tú ganas 15 puntos extra</strong>.</div></div>
+      <div class="puntos-step"><div class="step-num">4</div><div class="step-text"><strong>Canjea gratis</strong> — Escríbenos por WhatsApp con tu usuario y el premio deseado. Puntos sin expiración (con actividad cada 6 meses).</div></div>
+      <div style="background:var(--surface);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:1rem 1.25rem;margin-top:1.5rem">
+        <div style="font-size:.75rem;color:var(--gold);font-weight:700;margin-bottom:.5rem">EJEMPLO REAL</div>
+        <div style="font-size:.85rem;color:var(--muted);line-height:1.8">
+          1ra compra Netflix S/12 → 12 pts + 30 bienvenida = <strong style="color:var(--text)">42 pts</strong><br>
+          2da compra Netflix S/12 → <strong style="color:var(--text)">42 + 12 = 54 pts</strong><br>
+          → <strong style="color:var(--gold)">¡Canjeas Crunchyroll o HBO gratis!</strong> (50 pts)
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:1rem">Premios disponibles</h3>
+      <div class="rewards-list">
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--crunch)">Crunchyroll · 1 Perfil</div><div class="reward-desc">1 mes · 1 perfil renovable</div></div><div class="reward-cost">50 <small>pts</small></div></div>
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--hbo)">HBO Max · 1 Perfil</div><div class="reward-desc">1 mes · Plan estándar</div></div><div class="reward-cost">50 <small>pts</small></div></div>
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--disney)">Disney+ · 1 Perfil</div><div class="reward-desc">1 mes · Plan estándar</div></div><div class="reward-cost">60 <small>pts</small></div></div>
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--netflix)">Netflix · 1 Perfil</div><div class="reward-desc">1 mes · Plan internacional</div></div><div class="reward-cost">100 <small>pts</small></div></div>
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--spotify)">Spotify · Individual</div><div class="reward-desc">1 mes · Plan individual</div></div><div class="reward-cost">150 <small>pts</small></div></div>
+        <div class="reward-item"><div><div class="reward-name" style="color:var(--chatgpt)">ChatGPT Go · 1 Mes</div><div class="reward-desc">1 mes · Plan Go</div></div><div class="reward-cost">200 <small>pts</small></div></div>
+      </div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20canjear%20mis%20puntos" target="_blank" class="btn btn-gold" style="width:100%;margin-top:1.25rem;padding:.7rem;text-align:center;display:block;border-radius:8px">💬 Canjear por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- REFERIDOS -->
+<section id="referidos" class="wrap sec-divider">
+  <div class="section-title">Programa de <span>Referidos</span></div>
+  <p class="section-sub">Invita amigos · Ellos ganan puntos · Tú también ganas</p>
+  <div class="referral-box">
+    <h3>¿Cómo funciona?</h3>
+    <p style="color:var(--muted);font-size:.9rem;margin-top:.35rem">Regístrate para obtener tu código único y empieza a ganar cuando tus amigos compren.</p>
+    <div class="referral-how">
+      <div class="referral-step"><div class="icon">🔗</div><div class="label">Comparte tu código</div><div class="desc">Regístrate y obtén tu código único personal.</div></div>
+      <div class="referral-step"><div class="icon">👤</div><div class="label">Tu amigo se registra</div><div class="desc">Se registra usando tu código de referido.</div></div>
+      <div class="referral-step"><div class="icon">🛒</div><div class="label">Tu amigo compra</div><div class="desc">Al hacer su <strong>primera compra real</strong> se activan los bonos.</div></div>
+      <div class="referral-step"><div class="icon">⭐</div><div class="label">Ambos ganan</div><div class="desc">Tu amigo: <strong style="color:var(--gold)">+30 pts bienvenida</strong><br>Tú: <strong style="color:var(--gold)">+15 pts por referido</strong></div></div>
+    </div>
+    <div style="background:var(--surface2);border-radius:10px;padding:1rem 1.25rem;margin-top:1.5rem;font-size:.85rem;color:var(--muted);line-height:1.7">
+      ⚠️ <strong style="color:var(--text)">Anti-abuso:</strong> Los puntos solo se activan con una <strong style="color:var(--text)">compra real</strong>. Crear cuentas falsas sin comprar no genera ningún beneficio.
+    </div>
+    <button onclick="openModal('register')" class="btn btn-primary" style="margin-top:1.25rem;padding:.7rem 2rem">Registrarme y obtener mi código</button>
+  </div>
+</section>
+
+<section style="text-align:center;padding:4rem 2rem;border-top:1px solid var(--border)">
+  <div class="section-title" style="font-size:1.8rem">¿Tienes dudas o <span>quieres comprar</span>?</div>
+  <p style="color:var(--muted);margin:.75rem 0 2rem;font-size:.9rem">Respondemos al instante por WhatsApp</p>
+  <a href="https://wa.me/51924606154?text=Hola%2C%20vengo%20de%20Play%20Nova%20y%20quiero%20información" target="_blank" class="btn btn-primary" style="padding:1rem 2.5rem;font-size:1rem;display:inline-block;text-decoration:none">💬 Escribir a WhatsApp</a>
+</section>
+
+<footer>
+  <div style="margin-bottom:.75rem;font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px">PLAY <span style="color:var(--accent)">NOVA</span></div>
+  <p>Tu acceso a otro nivel de entretenimiento · Lima, Perú</p>
+  <p style="margin-top:.5rem;font-size:.7rem;opacity:.5">© 2026 Play Nova · Todos los derechos reservados</p>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">PLAY <span>NOVA</span></div>
+    <p class="modal-sub" id="modalSub">Ingresa a tu cuenta</p>
+    <div class="modal-tabs">
+      <button class="mtab active" id="tab-login" onclick="switchAuthTab('login')">Ingresar</button>
+      <button class="mtab" id="tab-register" onclick="switchAuthTab('register')">Registrarse</button>
+    </div>
+    <div id="form-login">
+      <div class="form-group"><label class="form-label">Usuario</label><input type="text" class="form-input" id="loginUser" placeholder="tu_usuario"></div>
+      <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••"></div>
+      <div id="loginErr" class="form-error"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:.5rem;padding:.75rem" onclick="doLogin()">Ingresar</button>
+    </div>
+    <div id="form-register" style="display:none">
+      <div class="form-group"><label class="form-label">Usuario <span style="color:var(--accent)">*</span></label><input type="text" class="form-input" id="regUser" placeholder="solo letras, números y _"></div>
+      <div class="form-group"><label class="form-label">Contraseña <span style="color:var(--accent)">*</span></label><input type="password" class="form-input" id="regPass" placeholder="Mínimo 8 caracteres"></div>
+      <div class="form-group"><label class="form-label">Teléfono <span style="color:var(--muted);font-size:.65rem">(opcional)</span></label><input type="text" class="form-input" id="regPhone" placeholder="+51 9XX XXX XXX"></div>
+      <div class="form-group"><label class="form-label">Código de referido <span style="color:var(--muted);font-size:.65rem">(opcional)</span></label><input type="text" class="form-input" id="regRef" placeholder="Código de quien te invitó" style="text-transform:uppercase"></div>
+      <div class="form-optional">✨ El registro es opcional. Sirve para acumular puntos y canjear premios gratis.</div>
+      <div id="regErr" class="form-error"></div>
+      <div id="regOk" class="form-success"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1rem;padding:.75rem" onclick="doRegister()">Crear Cuenta Gratis</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div id="dashboard">
+  <div class="dash-header">
+    <div class="dash-title">Admin <span style="color:var(--accent)">Play Nova</span></div>
+    <div style="display:flex;gap:.75rem;align-items:center">
+      <span id="dashDate" style="font-size:.8rem;color:var(--muted)"></span>
+      <button class="btn btn-outline btn-sm" onclick="closeDash()">Salir</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Ingresos</div><div class="stat-value green" id="statIncome">S/ 0</div></div>
+      <div class="stat-card"><div class="stat-label">Costos</div><div class="stat-value red" id="statCost">S/ 0</div></div>
+      <div class="stat-card"><div class="stat-label">Ganancia Neta</div><div class="stat-value gold" id="statProfit">S/ 0</div></div>
+      <div class="stat-card"><div class="stat-label">Clientes</div><div class="stat-value" id="statClients">0</div></div>
+      <div class="stat-card"><div class="stat-label">Total Ventas</div><div class="stat-value" id="statSales">0</div></div>
+      <div class="stat-card"><div class="stat-label">Puntos Emitidos</div><div class="stat-value gold" id="statPoints">0</div></div>
+      <div class="stat-card"><div class="stat-label">Riesgo Puntos</div><div class="stat-value red" id="statPointsVal">S/ 0</div></div>
+    </div>
+    <div class="dash-tabs">
+      <div class="dash-tab active" onclick="setDashTab(event,'ventas')">Registrar Venta</div>
+      <div class="dash-tab" onclick="setDashTab(event,'historial')">Historial</div>
+      <div class="dash-tab" onclick="setDashTab(event,'clientes')">Clientes</div>
+    </div>
+    <div class="dash-panel active" id="dpanel-ventas">
+      <div class="dash-section-title">Registrar venta y asignar puntos</div>
+      <div class="apf">
+        <div class="form-group"><label class="form-label">Usuario</label><input type="text" class="form-input" id="apUser" placeholder="usuario_cliente" style="font-size:.85rem"></div>
+        <div class="form-group"><label class="form-label">Servicio</label><input type="text" class="form-input" id="apService" placeholder="Netflix Perfil S/12" style="font-size:.85rem"></div>
+        <div class="form-group"><label class="form-label">Precio Venta S/</label><input type="number" class="form-input" id="apSale" placeholder="12" style="font-size:.85rem"></div>
+        <div class="form-group"><label class="form-label">Costo Xtreme S/</label><input type="number" class="form-input" id="apCost" placeholder="8.80" style="font-size:.85rem"></div>
+        <div class="form-group"><label class="form-label">¿Primera compra?</label>
+          <select class="form-input" id="apFirst" style="font-size:.85rem">
+            <option value="no">No</option>
+            <option value="yes">Sí → activa bono +30 pts y referido</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:none"><label class="form-label">&nbsp;</label><button class="btn btn-primary" onclick="addPoints()">Registrar</button></div>
+      </div>
+      <div id="apMsg" style="font-size:.85rem;margin-top:.25rem"></div>
+    </div>
+    <div class="dash-panel" id="dpanel-historial">
+      <div class="dash-section-title">Historial de ventas</div>
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Venta</th><th>Costo</th><th>Ganancia</th><th>Puntos</th><th>Notas</th></tr></thead><tbody id="salesBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+    <div class="dash-panel" id="dpanel-clientes">
+      <div class="dash-section-title">Clientes registrados</div>
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Usuario</th><th>Teléfono</th><th>Puntos</th><th>Referido</th><th>Mi código</th><th>Fecha</th></tr></thead><tbody id="clientsBody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT DASHBOARD -->
+<div id="clientDash">
+  <div class="dash-header">
+    <div class="dash-title">Mi Cuenta · <span id="clientUsername" style="color:var(--accent)"></span></div>
+    <div style="display:flex;gap:.75rem;align-items:center">
+      <div class="points-badge">★ <span id="clientPoints">0</span> pts</div>
+      <button class="btn btn-outline btn-sm" onclick="closeDash()">Salir</button>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Mis puntos</div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:700;color:var(--gold)" id="clientPointsBig">0</div>
+        <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">Acumulados hasta hoy</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(245,166,35,.2);border-radius:12px;padding:1.5rem">
+        <div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Mi código referido</div>
+        <div class="ref-code-box" id="clientRefCode" onclick="copyCode()" title="Clic para copiar">---</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:.5rem">Clic para copiar · +15 pts cuando tu amigo compre</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem">
+      <div style="font-weight:700;margin-bottom:.75rem">Mis canjes disponibles</div>
+      <div id="clientNextRewards" style="display:flex;flex-direction:column;gap:.5rem"></div>
+      <a id="canjearWaLink" href="#" target="_blank" class="btn btn-gold" style="display:inline-block;margin-top:1rem;padding:.6rem 1.5rem">💬 Canjear por WhatsApp</a>
+    </div>
+    <div class="dash-section">
+      <div class="dash-section-title">Mi historial</div>
+      <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Fecha</th><th>Descripción</th><th>Puntos</th></tr></thead><tbody id="clientHistBody"><tr><td colspan="3" style="text-align:center;color:var(--muted);padding:2rem">Sin historial aún</td></tr></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB='https://kyqzsnugnvnucxfymrwu.supabase.co/rest/v1';
+const KEY='sb_publishable_04dv96Cr06MtNRxSObmpHQ_HwZkIdYZ';
+const WA='51924606154';
+const H={'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY,Prefer:'return=representation'};
+let currentUser=null;
+const REWARDS=[
+  {name:'Crunchyroll Perfil',pts:50,color:'var(--crunch)'},
+  {name:'HBO Max Perfil',pts:50,color:'var(--hbo)'},
+  {name:'Disney+ Perfil',pts:60,color:'var(--disney)'},
+  {name:'Netflix Perfil',pts:100,color:'var(--netflix)'},
+  {name:'Spotify Individual',pts:150,color:'var(--spotify)'},
+  {name:'ChatGPT Go',pts:200,color:'var(--chatgpt)'},
+];
+
+function genCode(u){return 'NP'+u.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4)+Math.random().toString(36).slice(2,5).toUpperCase();}
+function setTab(s){document.querySelectorAll('.service-grid').forEach(g=>g.classList.remove('active'));document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));document.getElementById('grid-'+s).classList.add('active');document.querySelector(`.stab[data-svc="${s}"]`).classList.add('active');}
+function setDashTab(e,tab){document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));e.target.classList.add('active');document.getElementById('dpanel-'+tab).classList.add('active');}
+function openModal(tab){document.getElementById('authModal').classList.add('open');switchAuthTab(tab);}
+function closeModal(){document.getElementById('authModal').classList.remove('open');}
+function closeModalOutside(e){if(e.target.id==='authModal')closeModal();}
+function switchAuthTab(tab){
+  document.getElementById('form-login').style.display=tab==='login'?'':'none';
+  document.getElementById('form-register').style.display=tab==='register'?'':'none';
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-register').classList.toggle('active',tab==='register');
+  document.getElementById('modalSub').textContent=tab==='login'?'Ingresa a tu cuenta':'Crea tu cuenta (opcional)';
+}
+
+async function doRegister(){
+  const user=document.getElementById('regUser').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const phone=document.getElementById('regPhone').value.trim();
+  const refCode=document.getElementById('regRef').value.trim().toUpperCase();
+  const errEl=document.getElementById('regErr');
+  const okEl=document.getElementById('regOk');
+  errEl.textContent='';okEl.textContent='';
+  if(!user||user.length<3){errEl.textContent='El usuario debe tener al menos 3 caracteres';return;}
+  if(pass.length<8){errEl.textContent='La contraseña debe tener al menos 8 caracteres';return;}
+  if(!/^[a-zA-Z0-9_]+$/.test(user)){errEl.textContent='Solo letras, números y _ en el usuario';return;}
+  const check=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=id`,{headers:H});
+  const ex=await check.json();
+  if(ex.length>0){errEl.textContent='Ese usuario ya está en uso';return;}
+  let referredById=null;
+  if(refCode){
+    const rCheck=await fetch(`${SB}/pn_users?referral_code=eq.${encodeURIComponent(refCode)}&select=id`,{headers:H});
+    const rData=await rCheck.json();
+    if(!rData.length){errEl.textContent='Código de referido inválido';return;}
+    referredById=rData[0].id;
+  }
+  const passHash=btoa(pass+'_pn_salt_2026');
+  const myCode=genCode(user);
+  const res=await fetch(`${SB}/pn_users`,{method:'POST',headers:H,body:JSON.stringify({username:user,pass_hash:passHash,phone:phone||null,points:0,role:'client',referral_code:myCode,referred_by:referredById})});
+  if(res.ok){okEl.textContent='¡Cuenta creada! Tu código de referido: '+myCode;setTimeout(()=>switchAuthTab('login'),2500);}
+  else{const e=await res.json();errEl.textContent='Error: '+(e.message||'intenta de nuevo');}
+}
+
+async function doLogin(){
+  const user=document.getElementById('loginUser').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const errEl=document.getElementById('loginErr');
+  errEl.textContent='';
+  if(user==='admin'&&pass==='playnova2026'){closeModal();openAdminDash();return;}
+  if(!user||!pass){errEl.textContent='Completa todos los campos';return;}
+  const passHash=btoa(pass+'_pn_salt_2026');
+  const res=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&pass_hash=eq.${encodeURIComponent(passHash)}&select=*`,{headers:H});
+  const data=await res.json();
+  if(!data.length){errEl.textContent='Usuario o contraseña incorrectos';return;}
+  currentUser=data[0];closeModal();openClientDash();
+}
+
+async function openAdminDash(){
+  document.getElementById('dashboard').classList.add('open');
+  document.getElementById('dashDate').textContent=new Date().toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  await loadDashData();
+}
+
+async function loadDashData(){
+  const[sRes,cRes]=await Promise.all([fetch(`${SB}/pn_sales?select=*&order=created_at.desc`,{headers:H}),fetch(`${SB}/pn_users?role=eq.client&select=*&order=created_at.desc`,{headers:H})]);
+  const sales=await sRes.json();const clients=await cRes.json();
+  let inc=0,cost=0,pts=0;
+  const sb=document.getElementById('salesBody');
+  sb.innerHTML=sales.length?sales.map(s=>{
+    inc+=Number(s.sale_price)||0;cost+=Number(s.cost_price)||0;pts+=Number(s.points_given)||0;
+    const profit=(Number(s.sale_price)-Number(s.cost_price)).toFixed(2);
+    return `<tr><td style="color:var(--muted);font-size:.8rem">${new Date(s.created_at).toLocaleDateString('es-PE')}</td><td><strong>${s.client_username}</strong></td><td>${s.service_name}</td><td style="color:var(--spotify)"><strong>S/ ${Number(s.sale_price).toFixed(2)}</strong></td><td style="color:var(--muted)">S/ ${Number(s.cost_price).toFixed(2)}</td><td style="color:var(--gold)"><strong>S/ ${profit}</strong></td><td><span class="tag tag-gold">+${s.points_given}</span></td><td style="color:var(--muted);font-size:.8rem">${s.notes||''}</td></tr>`;
+  }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem">Sin ventas aún</td></tr>';
+  document.getElementById('statIncome').textContent='S/ '+inc.toFixed(2);
+  document.getElementById('statCost').textContent='S/ '+cost.toFixed(2);
+  document.getElementById('statProfit').textContent='S/ '+(inc-cost).toFixed(2);
+  document.getElementById('statClients').textContent=clients.length;
+  document.getElementById('statSales').textContent=sales.length;
+  document.getElementById('statPoints').textContent=pts;
+  document.getElementById('statPointsVal').textContent='S/ '+(pts*0.1).toFixed(2);
+  const cb=document.getElementById('clientsBody');
+  cb.innerHTML=clients.length?clients.map(c=>`<tr><td><strong>${c.username}</strong></td><td style="color:var(--muted)">${c.phone||'—'}</td><td><span class="tag tag-gold">★ ${c.points}</span></td><td style="color:var(--muted);font-size:.8rem">${c.referred_by?'✓ Sí':'—'}</td><td style="font-family:monospace;font-size:.8rem;color:var(--gold)">${c.referral_code||'—'}</td><td style="color:var(--muted);font-size:.8rem">${new Date(c.created_at).toLocaleDateString('es-PE')}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">Sin clientes aún</td></tr>';
+}
+
+async function addPoints(){
+  const user=document.getElementById('apUser').value.trim();
+  const svc=document.getElementById('apService').value.trim();
+  const sale=parseFloat(document.getElementById('apSale').value);
+  const cost=parseFloat(document.getElementById('apCost').value);
+  const isFirst=document.getElementById('apFirst').value==='yes';
+  const msgEl=document.getElementById('apMsg');
+  msgEl.style.color='#ff6b6b';msgEl.textContent='';
+  if(!user||!svc||isNaN(sale)||isNaN(cost)){msgEl.textContent='Completa todos los campos';return;}
+  const cRes=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=*`,{headers:H});
+  const cls=await cRes.json();
+  if(!cls.length){msgEl.textContent='Cliente no encontrado';return;}
+  const client=cls[0];
+  const purchasePts=Math.round(sale);
+  let bonusPts=0,notes='',refMsg='';
+  if(isFirst){
+    bonusPts=30;notes='Primera compra · +30 bienvenida';
+    if(client.referred_by){
+      const rRes=await fetch(`${SB}/pn_users?id=eq.${client.referred_by}&select=id,points,username`,{headers:H});
+      const refs=await rRes.json();
+      if(refs.length){
+        const ref=refs[0];
+        await fetch(`${SB}/pn_users?id=eq.${ref.id}`,{method:'PATCH',headers:H,body:JSON.stringify({points:(ref.points||0)+15})});
+        await fetch(`${SB}/pn_sales`,{method:'POST',headers:H,body:JSON.stringify({client_username:ref.username,service_name:'Bono referido · '+user,sale_price:0,cost_price:0,points_given:15,notes:'Referido activado'})});
+        refMsg=` · Referidor ${ref.username} +15 pts`;
+      }
+    }
+  }
+  const totalPts=(client.points||0)+purchasePts+bonusPts;
+  await fetch(`${SB}/pn_users?id=eq.${client.id}`,{method:'PATCH',headers:H,body:JSON.stringify({points:totalPts})});
+  await fetch(`${SB}/pn_sales`,{method:'POST',headers:H,body:JSON.stringify({client_username:user,service_name:svc,sale_price:sale,cost_price:cost,points_given:purchasePts+bonusPts,notes})});
+  msgEl.style.color='var(--spotify)';
+  msgEl.textContent=`✓ Listo. ${user} tiene ${totalPts} pts (+${purchasePts} compra${bonusPts?` +${bonusPts} bienvenida`:''})${refMsg}`;
+  ['apUser','apService','apSale','apCost'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('apFirst').value='no';
+  await loadDashData();
+}
+
+async function openClientDash(){
+  document.getElementById('clientDash').classList.add('open');
+  document.getElementById('clientUsername').textContent=currentUser.username;
+  document.getElementById('clientPoints').textContent=currentUser.points||0;
+  document.getElementById('clientPointsBig').textContent=currentUser.points||0;
+  document.getElementById('clientRefCode').textContent=currentUser.referral_code||'—';
+  document.getElementById('canjearWaLink').href=`https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(currentUser.username)}%20y%20quiero%20canjear%20mis%20puntos%20(tengo%20${currentUser.points||0}%20pts)`;
+  const pts=currentUser.points||0;
+  const nr=document.getElementById('clientNextRewards');
+  nr.innerHTML=REWARDS.map(r=>{
+    const diff=r.pts-pts;const ok=diff<=0;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:.5rem .75rem;background:var(--surface);border:1px solid ${ok?'rgba(29,185,84,.3)':'var(--border)'};border-radius:8px"><span style="font-size:.85rem;color:${r.color};font-weight:700">${r.name}</span><span style="font-size:.8rem;color:${ok?'var(--spotify)':'var(--muted)'};">${ok?'✓ ¡Puedes canjear!':'Faltan '+diff+' pts'} <span style="font-family:\'Rajdhani\',sans-serif;font-weight:700;color:var(--gold);margin-left:.5rem">${r.pts} pts</span></span></div>`;
+  }).join('');
+  const hRes=await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(currentUser.username)}&select=*&order=created_at.desc`,{headers:H});
+  const hist=await hRes.json();
+  const htb=document.getElementById('clientHistBody');
+  htb.innerHTML=hist.length?hist.map(h=>`<tr><td style="color:var(--muted);font-size:.8rem">${new Date(h.created_at).toLocaleDateString('es-PE')}</td><td>${h.service_name}</td><td><span class="tag tag-gold">+${h.points_given} pts</span></td></tr>`).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:2rem">Aún no hay historial</td></tr>';
+}
+
+function copyCode(){
+  const code=document.getElementById('clientRefCode').textContent;
+  if(code==='—')return;
+  navigator.clipboard.writeText(code).then(()=>{
+    const el=document.getElementById('clientRefCode');const orig=el.textContent;
+    el.textContent='¡Copiado!';setTimeout(()=>el.textContent=orig,1500);
+  });
+}
+function closeDash(){document.getElementById('dashboard').classList.remove('open');document.getElementById('clientDash').classList.remove('open');currentUser=null;}
+</script>
+</body>
+</html>
