@@ -20,13 +20,19 @@ function setAdminTab(tab) {
   document.getElementById('ap-' + tab).classList.add('on');
   const activeMenu = document.querySelector(`.amitem[data-tab="${tab}"]`);
   if (activeMenu) activeMenu.classList.add('on');
-  const titles = { resumen: 'Resumen', venta: 'Registrar Venta', historial: 'Historial de Ventas', productos: 'Catálogo de Productos', addprod: 'Agregar Producto', clientes: 'Clientes', categorias: 'Gestión de Categorías' };
+  const titles = {
+    resumen: 'Resumen', venta: 'Registrar Venta', historial: 'Historial de Ventas',
+    productos: 'Catálogo de Productos', addprod: 'Agregar Producto',
+    clientes: 'Clientes', categorias: 'Gestión de Categorías',
+    canjes: 'Premios & Canjes de Puntos'
+  };
   document.getElementById('adminTabTitle').textContent = titles[tab] || tab;
   if (tab === 'historial') loadHistory();
   if (tab === 'productos') loadProductsTable();
   if (tab === 'clientes') loadClients();
   if (tab === 'resumen') loadStats();
   if (tab === 'categorias') loadCats();
+  if (tab === 'canjes') loadRewards();
 }
 
 // ── STATS ──
@@ -243,6 +249,164 @@ async function deleteCat(id, name) {
   renderCatGrid(); updateProdCatSelect();
 }
 
+// ══════════════════════════════════════════
+// ── REWARDS / CANJES CRUD ──
+// ══════════════════════════════════════════
+
+// Live preview en el formulario
+function liveRewardPreview() {
+  const name  = document.getElementById('rewardName').value  || 'Nombre del premio';
+  const desc  = document.getElementById('rewardDesc').value  || 'Descripción';
+  const pts   = document.getElementById('rewardPts').value   || '0';
+  const color = document.getElementById('rewardColor').value || 'var(--go)';
+  const emoji = document.getElementById('rewardEmoji').value || '🎁';
+  document.getElementById('rpEmoji').textContent   = emoji;
+  document.getElementById('rpName').textContent    = name;
+  document.getElementById('rpName').style.color    = color;
+  document.getElementById('rpDescPrev').textContent = desc;
+  document.getElementById('rpPts').innerHTML = `<span style="color:${color}">${pts}</span> <small style="font-size:.65rem;font-family:'Exo 2',sans-serif;color:var(--mu);font-weight:400">pts</small>`;
+}
+
+function showRewardForm() {
+  resetRewardForm();
+  document.getElementById('rewardFormWrap').style.display = 'block';
+  document.getElementById('rewardFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetRewardForm() {
+  document.getElementById('rewardFormTitle').textContent = 'Nuevo Premio';
+  document.getElementById('rewardId').value = '';
+  document.getElementById('rewardName').value  = '';
+  document.getElementById('rewardDesc').value  = '';
+  document.getElementById('rewardPts').value   = '';
+  document.getElementById('rewardColor').value = '';
+  document.getElementById('rewardEmoji').value = '';
+  document.getElementById('rewardActive').value = 'true';
+  document.getElementById('rewardMsg').textContent = '';
+  document.getElementById('rewardFormWrap').style.display = 'none';
+  liveRewardPreview();
+}
+
+function editReward(r) {
+  document.getElementById('rewardFormTitle').textContent = 'Editar Premio';
+  document.getElementById('rewardId').value    = r.id;
+  document.getElementById('rewardName').value  = r.name    || '';
+  document.getElementById('rewardDesc').value  = r.description || '';
+  document.getElementById('rewardPts').value   = r.points_required || '';
+  document.getElementById('rewardColor').value = r.color   || '';
+  document.getElementById('rewardEmoji').value = r.emoji   || '';
+  document.getElementById('rewardActive').value = r.active ? 'true' : 'false';
+  document.getElementById('rewardMsg').textContent = '';
+  document.getElementById('rewardFormWrap').style.display = 'block';
+  document.getElementById('rewardFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  liveRewardPreview();
+}
+
+async function saveReward() {
+  const id     = document.getElementById('rewardId').value;
+  const name   = document.getElementById('rewardName').value.trim();
+  const desc   = document.getElementById('rewardDesc').value.trim();
+  const pts    = parseInt(document.getElementById('rewardPts').value);
+  const color  = document.getElementById('rewardColor').value.trim();
+  const emoji  = document.getElementById('rewardEmoji').value.trim();
+  const active = document.getElementById('rewardActive').value === 'true';
+  const mE     = document.getElementById('rewardMsg');
+  mE.textContent = '';
+
+  if (!name)        { mE.textContent = 'El nombre es requerido'; return; }
+  if (isNaN(pts) || pts < 1) { mE.textContent = 'Los puntos deben ser un número mayor a 0'; return; }
+
+  const body = {
+    name,
+    description: desc || null,
+    points_required: pts,
+    color: color || null,
+    emoji: emoji || null,
+    active
+  };
+
+  try {
+    const res = id
+      ? await fetch(`${SB}/pn_rewards?id=eq.${id}`, { method: 'PATCH', headers: H, body: JSON.stringify(body) })
+      : await fetch(`${SB}/pn_rewards`,              { method: 'POST',  headers: H, body: JSON.stringify(body) });
+
+    if (res.ok) {
+      resetRewardForm();
+      await loadRewards();
+    } else {
+      const e = await res.json();
+      mE.textContent = 'Error: ' + (e.message || 'intenta de nuevo');
+    }
+  } catch (e) {
+    mE.textContent = 'Error de conexión';
+  }
+}
+
+async function toggleReward(id, active) {
+  await fetch(`${SB}/pn_rewards?id=eq.${id}`, {
+    method: 'PATCH', headers: H,
+    body: JSON.stringify({ active: !active })
+  });
+  await loadRewards();
+}
+
+async function deleteReward(id, name) {
+  if (!confirm(`¿Eliminar el premio "${name}"?\nEsta acción no se puede deshacer.`)) return;
+  try {
+    await fetch(`${SB}/pn_rewards?id=eq.${id}`, { method: 'DELETE', headers: H });
+  } catch (e) { }
+  await loadRewards();
+}
+
+async function loadRewards() {
+  const b = document.getElementById('rewardsBody');
+  b.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--mu);padding:1.5rem">Cargando...</td></tr>';
+  try {
+    const r = await fetch(`${SB}/pn_rewards?select=*&order=points_required`, { headers: HG });
+    if (!r.ok) throw new Error('fetch');
+    const rewards = await r.json();
+
+    if (!rewards.length) {
+      b.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--mu);padding:2rem">No hay premios todavía. ¡Agrega el primero!</td></tr>';
+      return;
+    }
+
+    b.innerHTML = rewards.map(rw => {
+      const color  = rw.color  || 'var(--go)';
+      const emoji  = rw.emoji  || '🎁';
+      const active = rw.active !== false; // default true si no existe
+      const esc    = JSON.stringify(rw).replace(/"/g, '&quot;');
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:.55rem">
+              <span style="font-size:1.2rem">${emoji}</span>
+              <strong style="color:${color}">${rw.name}</strong>
+            </div>
+          </td>
+          <td style="color:var(--mu);font-size:.78rem">${rw.description || '—'}</td>
+          <td>
+            <span style="font-family:'Rajdhani',sans-serif;font-size:1.15rem;font-weight:700;color:${color}">${rw.points_required}</span>
+            <span style="font-size:.68rem;color:var(--mu)"> pts</span>
+          </td>
+          <td>
+            <span class="tag ${active ? 'tag-g' : 'tag-r'}">${active ? 'Activo' : 'Inactivo'}</span>
+          </td>
+          <td style="white-space:nowrap">
+            <button class="btn btn-out btn-sm" style="margin-right:.3rem" onclick='editReward(${esc})'>✏️ Editar</button>
+            <button class="btn btn-sm" style="background:${active ? 'rgba(230,51,41,.12)' : 'rgba(29,185,84,.12)'};color:${active ? '#ff6b6b' : '#1DB954'};border:none;margin-right:.3rem" onclick="toggleReward('${rw.id}',${active})">${active ? 'Desactivar' : 'Activar'}</button>
+            <button class="btn btn-sm" style="background:rgba(230,51,41,.15);color:#ff6b6b;border:none" onclick="deleteReward('${rw.id}','${rw.name.replace(/'/g,"\\'")}')">🗑</button>
+          </td>
+        </tr>`;
+    }).join('');
+  } catch (e) {
+    b.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:1.5rem">
+      <span style="color:#ff6b6b">Error al cargar premios.</span>
+      <button onclick="loadRewards()" style="background:var(--ac);color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;cursor:pointer;margin-left:.5rem">Reintentar</button>
+    </td></tr>`;
+  }
+}
+
 // ── ADD POINTS ──
 async function addPoints() {
   const user = document.getElementById('apUser').value.trim();
@@ -293,6 +457,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const saved = loadS();
   if (!saved || !saved.isAdmin) { window.location.href = 'index.html'; return; }
   document.getElementById('dashDate').textContent = new Date().toLocaleDateString('es-PE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  // bind live preview inputs
+  ['rewardName','rewardDesc','rewardPts','rewardColor','rewardEmoji'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', liveRewardPreview);
+  });
+
   await loadCats();
   await loadStats();
   await loadProdsDropdown();
