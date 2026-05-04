@@ -175,7 +175,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 /* ── ADMIN DASHBOARD ── */
 #adminDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);}
 #adminDash.open{display:flex;}
-.aside{width:220px;min-width:220px;background:var(--s2);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;transition:none;}
+.aside{width:220px;min-width:220px;background:var(--s2);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;}
 .aside-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--b1);}
 .aside-logo .l{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;}
 .aside-logo .l span{color:var(--ac);}
@@ -284,45 +284,37 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .nav-links{display:none;}
   .pgrid{grid-template-columns:1fr;}
   .modal{padding:1.5rem;}
-  /* hero mobile */
   .hcta{gap:.65rem;}
   .hcta .btn{padding:.6rem 1.25rem;font-size:.82rem;}
-  /* plan cards 1 col */
   .sgrid{grid-template-columns:1fr!important;}
   .cgrid{grid-template-columns:1fr!important;}
   .pgrid{gap:1.5rem;}
-  /* pcard padding */
   .pcard{padding:1.1rem;}
 
   /* ── ADMIN MOBILE ── */
+  /* aside becomes a hidden fixed overlay, NOT part of the flex layout */
   .aside{
-    position:fixed;top:0;left:-270px;width:260px;height:100%;z-index:301;
-    background:var(--s2);border-right:1px solid var(--b2);
-    flex-direction:column;overflow-y:auto;
+    position:fixed !important;
+    top:0;left:-270px;
+    width:260px;height:100% !important;
+    z-index:300;
     transition:left .28s cubic-bezier(.4,0,.2,1);
+    min-width:unset !important;
   }
   .aside.open{left:0;}
-  /* make amenu items pill style on mobile */
-  .amitem{border-radius:50px;padding:.7rem 1rem;}
-  #adminDash{flex-direction:column;}
-  .dash-main{height:auto;flex:1;}
-  /* topbar: add ham button */
+  /* dash-main fills the full width since aside is out of flow */
+  #adminDash{flex-direction:row;}
+  .dash-main{width:100%;height:100vh;}
   .admin-ham{display:flex;}
   .dash-topbar{padding:.75rem 1rem;gap:.65rem;}
   .dash-topbar-title{font-size:1rem;}
   #dashDate{display:none;}
   .dash-content{padding:1rem .85rem;}
-  /* stats 2 col */
   .stats-grid{grid-template-columns:1fr 1fr;gap:.65rem;}
   .sval{font-size:1.5rem;}
-  /* sale form stack */
   .sale-form{flex-direction:column;gap:.65rem;}
   .sale-form .fg{min-width:unset!important;flex:none!important;width:100%;}
-  /* prod form grid */
-  #ap-addprod>div[style*="grid"]{grid-template-columns:1fr!important;}
-  /* cat grid 1 col */
   .cat-grid{grid-template-columns:1fr;}
-  /* tables scroll */
   .dt{font-size:.75rem;}
   .dt th,.dt td{padding:.5rem .65rem;}
 
@@ -344,6 +336,7 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .stats-grid{grid-template-columns:1fr 1fr;}
   .reward-grid{grid-template-columns:1fr;}
   .modal{max-width:100%;margin:.5rem;border-radius:12px;}
+  .sval{font-size:1.35rem;}
 }
 </style>
 </head>
