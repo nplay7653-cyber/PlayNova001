@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Nova · Admin</title>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div class="admin-sidebar-overlay" id="adminSidebarOverlay" onclick="closeAdminSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div class="aside" id="adminAside">
+  <div class="aside-logo">
+    <div class="l">PLAY <span>NOVA</span></div>
+    <div class="sub">Panel de Administración</div>
+  </div>
+  <div class="amenu">
+    <div class="amenu-section">General</div>
+    <div class="amitem on" data-tab="resumen" onclick="setAdminTab('resumen');closeAdminSidebar()"><span class="ico">📊</span>Resumen</div>
+    <div class="amenu-section">Ventas</div>
+    <div class="amitem" data-tab="venta" onclick="setAdminTab('venta');closeAdminSidebar()"><span class="ico">🛒</span>Registrar Venta</div>
+    <div class="amitem" data-tab="historial" onclick="setAdminTab('historial');closeAdminSidebar()"><span class="ico">📋</span>Historial</div>
+    <div class="amenu-section">Catálogo</div>
+    <div class="amitem" data-tab="productos" onclick="setAdminTab('productos');closeAdminSidebar()"><span class="ico">📦</span>Productos</div>
+    <div class="amitem" data-tab="addprod" onclick="setAdminTab('addprod');closeAdminSidebar()"><span class="ico">➕</span>Agregar Producto</div>
+    <div class="amitem" data-tab="categorias" onclick="setAdminTab('categorias');closeAdminSidebar()"><span class="ico">🏷️</span>Categorías</div>
+    <div class="amenu-section">Clientes</div>
+    <div class="amitem" data-tab="clientes" onclick="setAdminTab('clientes');closeAdminSidebar()"><span class="ico">👥</span>Ver Clientes</div>
+  </div>
+  <div class="aside-foot">
+    <div class="uinfo"><strong>Administrador</strong>Play Nova</div>
+    <button class="btn btn-out btn-sm" onclick="closeDash()" style="width:100%;justify-content:center">🚪 Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="dash-main">
+  <div class="dash-topbar">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <button class="admin-ham" onclick="openAdminSidebar()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="dash-topbar-title" id="adminTabTitle">Resumen</div>
+    </div>
+    <span id="dashDate" style="font-size:.78rem;color:var(--mu)"></span>
+  </div>
+  <div class="dash-content">
+
+    <!-- RESUMEN -->
+    <div class="apanel on" id="ap-resumen">
+      <div class="stats-grid">
+        <div class="scard"><div class="slabel">Ingresos</div><div class="sval g" id="stIncome">S/ 0</div></div>
+        <div class="scard"><div class="slabel">Costos</div><div class="sval r" id="stCost">S/ 0</div></div>
+        <div class="scard"><div class="slabel">Ganancia Neta</div><div class="sval y" id="stProfit">S/ 0</div></div>
+        <div class="scard"><div class="slabel">Clientes</div><div class="sval" id="stClients">0</div></div>
+        <div class="scard"><div class="slabel">Total Ventas</div><div class="sval" id="stSales">0</div></div>
+        <div class="scard"><div class="slabel">Puntos Emitidos</div><div class="sval y" id="stPts">0</div></div>
+        <div class="scard"><div class="slabel">Riesgo Puntos</div><div class="sval r" id="stPtsVal">S/ 0</div></div>
+      </div>
+      <div class="section-hd">Ventas recientes</div>
+      <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Venta</th><th>Ganancia</th><th>Puntos</th></tr></thead><tbody id="recentSales"><tr><td colspan="6" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+
+    <!-- REGISTRAR VENTA -->
+    <div class="apanel" id="ap-venta">
+      <div class="section-hd">Registrar Venta</div>
+      <div class="sale-form">
+        <div class="fg" style="flex:2;min-width:150px"><label class="fl">Usuario Cliente</label><input class="fi" id="apUser" placeholder="usuario_cliente"></div>
+        <div class="fg" style="flex:3;min-width:200px"><label class="fl">Servicio</label>
+          <select class="fi" id="apProduct" onchange="fillProduct()"><option value="">— Selecciona servicio —</option></select>
+        </div>
+        <div class="fg" style="flex:none;min-width:90px"><label class="fl">Venta S/</label><input class="fi" id="apSale" readonly style="color:var(--sp)"></div>
+        <div class="fg" style="flex:none;min-width:90px"><label class="fl">Costo S/</label><input class="fi" id="apCost" readonly></div>
+        <div class="fg" style="flex:none;min-width:90px"><label class="fl">Ganancia</label><input class="fi" id="apProfit" readonly style="color:var(--go)"></div>
+        <div class="fg" style="flex:none"><label class="fl">¿1ra compra?</label>
+          <select class="fi" id="apFirst"><option value="no">No</option><option value="yes">Sí (+30pts+referido)</option></select>
+        </div>
+        <div class="fg" style="flex:none;align-self:flex-end"><button class="btn btn-red" onclick="addPoints()">Registrar</button></div>
+      </div>
+      <div id="apMsg" style="font-size:.82rem;margin-top:.35rem"></div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="apanel" id="ap-historial">
+      <div class="section-hd">Historial de Ventas</div>
+      <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Venta</th><th>Costo</th><th>Ganancia</th><th>Puntos</th><th>Notas</th></tr></thead><tbody id="salesBody"><tr><td colspan="8" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div class="apanel" id="ap-productos">
+      <div class="section-hd">Catálogo de Productos <button class="btn btn-red btn-sm" onclick="setAdminTab('addprod')">+ Agregar</button></div>
+      <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Cat.</th><th>Nombre</th><th>Venta</th><th>Costo</th><th>Ganancia</th><th>Pts</th><th>Acción</th></tr></thead><tbody id="prodBody"><tr><td colspan="7" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+
+    <!-- AGREGAR PRODUCTO -->
+    <div class="apanel" id="ap-addprod">
+      <div class="section-hd" id="prodFormTitle">Agregar Producto</div>
+      <input type="hidden" id="prodId">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:600px">
+        <div class="fg"><label class="fl">Categoría</label>
+          <select class="fi" id="prodCat"><option value="netflix">Netflix</option></select>
+        </div>
+        <div class="fg"><label class="fl">Nombre del producto</label><input class="fi" id="prodName" placeholder="ej: Perfil Internacional"></div>
+        <div class="fg" style="grid-column:1/-1"><label class="fl">Descripción</label><input class="fi" id="prodDesc" placeholder="ej: 1 perfil · Renovable"></div>
+        <div class="fg"><label class="fl">Precio Venta S/</label><input type="number" class="fi" id="prodSale" placeholder="12.00" oninput="calcPP()"></div>
+        <div class="fg"><label class="fl">Costo Xtreme S/</label><input type="number" class="fi" id="prodCost" placeholder="8.80" oninput="calcPP()"></div>
+      </div>
+      <div class="profit-preview" style="max-width:600px">Ganancia: <strong style="color:var(--go)" id="ppProfit">S/ 0.00</strong> &nbsp;·&nbsp; Margen: <strong style="color:var(--go)" id="ppMargin">0%</strong></div>
+      <div id="prodMsg" class="ferr"></div>
+      <div style="display:flex;gap:.75rem;margin-top:.5rem">
+        <button class="btn btn-red" onclick="saveProduct()">Guardar Producto</button>
+        <button class="btn btn-out" onclick="resetProdForm()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div class="apanel" id="ap-clientes">
+      <div class="section-hd">Clientes Registrados</div>
+      <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Usuario</th><th>Teléfono</th><th>Puntos</th><th>Referido</th><th>Código</th><th>Registrado</th></tr></thead><tbody id="clientsBody"><tr><td colspan="6" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
+    </div>
+
+    <!-- CATEGORÍAS -->
+    <div class="apanel" id="ap-categorias">
+      <div class="section-hd">Gestión de Categorías</div>
+      <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:1.25rem;max-width:520px;margin-bottom:1.5rem">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.9rem" id="catFormTitle">Nueva Categoría</div>
+        <input type="hidden" id="catId">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+          <div class="fg" style="margin:0"><label class="fl">Nombre</label><input class="fi" id="catName" placeholder="ej: Grok, Prime Video"></div>
+          <div class="fg" style="margin:0"><label class="fl">Slug (clave)</label><input class="fi" id="catSlug" placeholder="ej: grok" style="text-transform:lowercase"></div>
+          <div class="fg" style="margin:0"><label class="fl">Emoji / Ícono</label><input class="fi" id="catEmoji" placeholder="ej: 🤖" maxlength="4"></div>
+          <div class="fg" style="margin:0"><label class="fl">Color hex</label><input class="fi" id="catColor" placeholder="#e63329" maxlength="9"></div>
+        </div>
+        <div id="catMsg" class="ferr" style="margin-bottom:.5rem"></div>
+        <div style="display:flex;gap:.65rem">
+          <button class="btn btn-red" onclick="saveCat()">Guardar</button>
+          <button class="btn btn-out" onclick="resetCatForm()">Cancelar</button>
+        </div>
+      </div>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.65rem">Categorías activas</div>
+      <div class="cat-grid" id="catGrid"><div style="color:var(--mu);font-size:.85rem">Cargando...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

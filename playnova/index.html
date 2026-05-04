@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Nova</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="logo">PLAY <span>NOVA</span></div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#combos">Combos</a>
+    <a href="#puntos">Puntos</a>
+    <a href="#referidos">Referidos</a>
+  </div>
+  <div class="nav-right" id="navRight">
+    <button class="btn btn-out" onclick="openModal('login')">Ingresar</button>
+    <button class="btn btn-red" onclick="openModal('register')">Registrarse</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div><div class="stars"></div>
+  <div class="np-wrap"><div class="orbit"></div><div class="np">NP</div></div>
+  <div class="hbrand">PLAY <span>NOVA</span></div>
+  <p class="htag">Tu acceso a otro nivel de entretenimiento</p>
+  <div class="hplat">
+    <span style="color:var(--nf)">NETFLIX</span><span style="color:var(--mu)">|</span>
+    <span style="color:var(--hb)">HBO</span><span style="color:var(--mu)">|</span>
+    <span style="color:var(--ds)">DISNEY+</span><span style="color:var(--mu)">|</span>
+    <span style="color:var(--sp)">SPOTIFY</span><span style="color:var(--mu)">|</span><span>Y MÁS</span>
+  </div>
+  <div class="hcta">
+    <a href="#servicios" class="btn btn-red" style="padding:.7rem 1.75rem;font-size:.92rem;text-decoration:none">Ver Precios</a>
+    <a href="#combos" class="btn btn-go" style="padding:.7rem 1.75rem;font-size:.92rem;text-decoration:none">Ver Combos</a>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="wrap sdiv">
+  <div class="stitle">Nuestros <span>Servicios</span></div>
+  <p class="ssub">Precios competitivos · Renovable · Soporte WhatsApp · Gana puntos en cada compra</p>
+  <div class="svc-tabs">
+    <div class="stab on" data-s="netflix" onclick="setTab('netflix')">Netflix</div>
+    <div class="stab" data-s="hbo" onclick="setTab('hbo')">HBO Max</div>
+    <div class="stab" data-s="disney" onclick="setTab('disney')">Disney+</div>
+    <div class="stab" data-s="chatgpt" onclick="setTab('chatgpt')">ChatGPT</div>
+    <div class="stab" data-s="canva" onclick="setTab('canva')">Canva</div>
+    <div class="stab" data-s="spotify" onclick="setTab('spotify')">Spotify</div>
+    <div class="stab" data-s="directv" onclick="setTab('directv')">DirecTV</div>
+    <div class="stab" data-s="crunchyroll" onclick="setTab('crunchyroll')">Crunchyroll</div>
+  </div>
+  <div class="sgrid on" id="g-netflix">
+    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><div class="pname">Internacional · Completo</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">48</span><span class="pe">/mes</span></div><div class="ppts">Gana 48 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Completo%205%20perfiles%20S%2F48" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><div class="pname">Internacional · Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Perfil%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix · Xtreme</span><div class="pname">1 Perfil Xtreme Tec</div><div class="pdesc">1 perfil · Renovable · Xtreme</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%201%20Perfil%20Xtreme%20Tec%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-hbo">
+    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO Max</span><div class="pname">Estándar · Completo</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">35</span><span class="pe">/mes</span></div><div class="ppts">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Max%20Est%C3%A1ndar%20Completo%20S%2F35" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO Max</span><div class="pname">1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">6</span><span class="pe">/mes</span></div><div class="ppts">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%201%20Perfil%20S%2F6" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO · Premium</span><div class="pname">Platino · Completo</div><div class="pdesc">5 perfiles · No renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/mes</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Platino%20Completo%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-disney">
+    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><div class="pname">Estándar · Completo</div><div class="pdesc">7 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">40</span><span class="pe">/mes</span></div><div class="ppts">Gana 40 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Est%C3%A1ndar%20Completo%20S%2F40" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><div class="pname">1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">6</span><span class="pe">/mes</span></div><div class="ppts">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%201%20Perfil%20S%2F6" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · ESPN</span><div class="pname">Premium ESPN · Completo</div><div class="pdesc">7 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">61</span><span class="pe">/mes</span></div><div class="ppts">Gana 61 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Completo%20S%2F61" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · ESPN</span><div class="pname">Premium ESPN · Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Perfil%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · TV</span><div class="pname">Premium ESPN · Solo TV</div><div class="pdesc">1 perfil · Solo TV</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Solo%20TV%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-chatgpt">
+    <div class="pcard" data-s="chatgpt"><span class="pbadge" style="background:rgba(116,170,156,.15);color:#74aa9c">ChatGPT</span><div class="pname">Go · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/mes</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Go%201%20Perfil%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="chatgpt"><span class="pbadge" style="background:rgba(116,170,156,.15);color:#74aa9c">ChatGPT · Pro</span><div class="pname">Pro · 1 Perfil</div><div class="pdesc">1 perfil · No renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">30</span><span class="pe">/mes</span></div><div class="ppts">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Pro%201%20Perfil%20S%2F30" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-canva">
+    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 1M</span><div class="pname">1 Mes · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%201%20Mes%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 3M</span><div class="pname">3 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/3 meses</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%203%20Meses%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 6M</span><div class="pname">6 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/6 meses</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%206%20Meses%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 12M</span><div class="pname">12 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Anual</div><div class="pprice"><span class="cy">S/</span><span class="am">30</span><span class="pe">/año</span></div><div class="ppts">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%2012%20Meses%20S%2F30" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-spotify">
+    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span><div class="pname">Individual · 1 Mes</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%201%20Mes%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify · 3M</span><div class="pname">Individual · 3 Meses</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">25</span><span class="pe">/3 meses</span></div><div class="ppts">Gana 25 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%203%20Meses%20S%2F25" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify · Familiar</span><div class="pname">Familiar · 1 Mes</div><div class="pdesc">6 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">35</span><span class="pe">/mes</span></div><div class="ppts">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Familiar%201%20Mes%20S%2F35" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-directv">
+    <div class="pcard" data-s="directv"><span class="pbadge" style="background:rgba(0,153,216,.15);color:#6ac8f0">DirecTV GO</span><div class="pname">DirecTV GO · 1 Perfil</div><div class="pdesc">1 perfil · Renovable · Solo TV</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/mes</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20DirecTV%20GO%201%20Perfil%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+  <div class="sgrid" id="g-crunchyroll">
+    <div class="pcard" data-s="crunchyroll"><span class="pbadge" style="background:rgba(244,117,33,.15);color:#ffaa70">Crunchyroll</span><div class="pname">Perfil · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">5</span><span class="pe">/mes</span></div><div class="ppts">Gana 5 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Perfil%201%20Perfil%20S%2F5" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+    <div class="pcard" data-s="crunchyroll"><span class="pbadge" style="background:rgba(244,117,33,.15);color:#ffaa70">Crunchyroll</span><div class="pname">Completo · 5 Perfiles</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/mes</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Completo%205%20Perfiles%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
+  </div>
+</section>
+
+<!-- COMBOS -->
+<section id="combos" class="wrap sdiv">
+  <div class="stitle">Combos <span>Nova</span></div>
+  <p class="ssub">Más servicios · Mejor precio · Más puntos de una sola vez</p>
+  <div class="cgrid">
+    <div class="ccard"><div class="ctag">🔥 Más popular</div><div class="cname">Nova Básico</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify Individual</span></div><div class="cpricing"><span class="cnew">S/ 20</span><span class="cold">S/ 24</span></div><div class="csave">✓ Ahorras S/ 4 al mes</div><div class="cpts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20B%C3%A1sico%20S%2F20" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+    <div class="ccard"><div class="ctag">🎬 Entretenimiento</div><div class="cname">Nova Entretenimiento</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span><span class="cs" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ Perfil</span></div><div class="cpricing"><span class="cnew">S/ 16</span><span class="cold">S/ 18</span></div><div class="csave">✓ Ahorras S/ 2 al mes</div><div class="cpts">Gana 16 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Entretenimiento%20S%2F16" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+    <div class="ccard"><div class="ctag">👑 Premium</div><div class="cname">Nova Premium</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><span class="cs" style="background:rgba(139,0,255,.15);color:#b87fff">HBO</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 26</span><span class="cold">S/ 30</span></div><div class="csave">✓ Ahorras S/ 4 al mes</div><div class="cpts">Gana 26 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Premium%20S%2F26" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+    <div class="ccard"><div class="ctag">🌟 Todo incluido</div><div class="cname">Nova Total</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><span class="cs" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><span class="cs" style="background:rgba(139,0,255,.15);color:#b87fff">HBO</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 31</span><span class="cold">S/ 36</span></div><div class="csave">✓ Ahorras S/ 5 al mes</div><div class="cpts">Gana 31 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Total%20S%2F31" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+    <div class="ccard"><div class="ctag">🎨 Creativo</div><div class="cname">Nova Creativo</div><div class="csvcs"><span class="cs" style="background:rgba(125,42,232,.15);color:#b280ff">Canva 1 Mes</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 18</span><span class="cold">S/ 22</span></div><div class="csave">✓ Ahorras S/ 4 al mes</div><div class="cpts">Gana 18 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Creativo%20S%2F18" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+  </div>
+</section>
+
+<!-- PUNTOS -->
+<section id="puntos" class="wrap sdiv">
+  <div class="stitle">Sistema de <span>Puntos</span></div>
+  <p class="ssub">Compra · Acumula · Canjea gratis</p>
+  <div class="pgrid">
+    <div class="pghow">
+      <h3>¿Cómo funciona?</h3>
+      <div class="pstep"><div class="snum">1</div><div class="stxt"><strong>Regístrate gratis</strong> — Al hacer tu primera compra recibes <strong style="color:var(--go)">+30 pts de bienvenida</strong>.</div></div>
+      <div class="pstep"><div class="snum">2</div><div class="stxt"><strong>Compra y acumula</strong> — Cada sol gastado = 1 punto. Netflix S/12 = 12 pts.</div></div>
+      <div class="pstep"><div class="snum">3</div><div class="stxt"><strong>Invita amigos</strong> — Tu amigo compra y tú ganas <strong style="color:var(--go)">+15 pts extra</strong>.</div></div>
+      <div class="pstep"><div class="snum">4</div><div class="stxt"><strong>Canjea</strong> — Escríbenos por WhatsApp. Sin expiración (con actividad cada 6 meses).</div></div>
+      <div style="background:var(--s1);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.82rem;color:var(--mu);line-height:1.8">
+        <div style="font-size:.7rem;color:var(--go);font-weight:700;margin-bottom:.35rem">EJEMPLO REAL</div>
+        1ra compra S/12 + 30 bienvenida = <strong style="color:var(--tx)">42 pts</strong><br>
+        2da compra S/12 → <strong style="color:var(--tx)">54 pts</strong><br>
+        → <strong style="color:var(--go)">¡Canjeas Crunchyroll o HBO gratis!</strong>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-family:'Rajdhani',sans-serif;font-size:1.35rem;font-weight:700;margin-bottom:.9rem">Premios disponibles</h3>
+      <div class="rlist">
+        <div class="ritem"><div><div class="rname" style="color:var(--cr)">Crunchyroll · 1 Perfil</div><div class="rdesc">1 mes · renovable</div></div><div class="rcost">50 <small>pts</small></div></div>
+        <div class="ritem"><div><div class="rname" style="color:var(--hb)">HBO Max · 1 Perfil</div><div class="rdesc">1 mes · plan estándar</div></div><div class="rcost">50 <small>pts</small></div></div>
+        <div class="ritem"><div><div class="rname" style="color:var(--ds)">Disney+ · 1 Perfil</div><div class="rdesc">1 mes · plan estándar</div></div><div class="rcost">60 <small>pts</small></div></div>
+        <div class="ritem"><div><div class="rname" style="color:var(--nf)">Netflix · 1 Perfil</div><div class="rdesc">1 mes · internacional</div></div><div class="rcost">100 <small>pts</small></div></div>
+        <div class="ritem"><div><div class="rname" style="color:var(--sp)">Spotify · Individual</div><div class="rdesc">1 mes</div></div><div class="rcost">150 <small>pts</small></div></div>
+        <div class="ritem"><div><div class="rname" style="color:var(--gp)">ChatGPT Go</div><div class="rdesc">1 mes</div></div><div class="rcost">200 <small>pts</small></div></div>
+      </div>
+      <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20canjear%20mis%20puntos" target="_blank" class="btn btn-go" style="width:100%;margin-top:1.1rem;padding:.65rem;justify-content:center;border-radius:8px;text-decoration:none">💬 Canjear por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- REFERIDOS -->
+<section id="referidos" class="wrap sdiv">
+  <div class="stitle">Programa de <span>Referidos</span></div>
+  <p class="ssub">Invita amigos · Ellos ganan · Tú también ganas</p>
+  <div class="refbox">
+    <h3>¿Cómo funciona?</h3>
+    <p style="color:var(--mu);font-size:.88rem;margin-top:.3rem">Regístrate para obtener tu código único.</p>
+    <div class="refhow">
+      <div class="rstep"><div class="ico">🔗</div><div class="rl">Comparte tu código</div><div class="rd">Regístrate y obtén tu código único.</div></div>
+      <div class="rstep"><div class="ico">👤</div><div class="rl">Tu amigo se registra</div><div class="rd">Usa tu código al crear su cuenta.</div></div>
+      <div class="rstep"><div class="ico">🛒</div><div class="rl">Tu amigo compra</div><div class="rd">Al hacer su <strong>primera compra real</strong> se activan los bonos.</div></div>
+      <div class="rstep"><div class="ico">⭐</div><div class="rl">Ambos ganan</div><div class="rd">Amigo: <strong style="color:var(--go)">+30 pts</strong><br>Tú: <strong style="color:var(--go)">+15 pts</strong></div></div>
+    </div>
+    <div style="background:var(--s2);border-radius:10px;padding:.9rem 1.1rem;margin-top:1.25rem;font-size:.82rem;color:var(--mu)">⚠️ <strong style="color:var(--tx)">Anti-abuso:</strong> Solo se activan con una compra real. Cuentas falsas = 0 beneficio.</div>
+    <button onclick="openModal('register')" class="btn btn-red" style="margin-top:1.1rem;padding:.65rem 1.75rem">Registrarme y obtener mi código</button>
+  </div>
+</section>
+
+<section style="text-align:center;padding:3.5rem 2rem;border-top:1px solid var(--b1)">
+  <div class="stitle" style="font-size:1.75rem">¿Dudas o quieres <span>comprar</span>?</div>
+  <p style="color:var(--mu);margin:.65rem 0 1.75rem;font-size:.88rem">Respondemos al instante</p>
+  <a href="https://wa.me/51924606154?text=Hola%2C%20vengo%20de%20Play%20Nova" target="_blank" class="btn btn-red" style="padding:.9rem 2.25rem;font-size:.95rem;text-decoration:none">💬 Escribir a WhatsApp</a>
+</section>
+
+<footer>
+  <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:2px;margin-bottom:.5rem">PLAY <span style="color:var(--ac)">NOVA</span></div>
+  <p>Tu acceso a otro nivel · Lima, Perú</p>
+  <p style="margin-top:.4rem;opacity:.4;font-size:.7rem">© 2026 Play Nova · Todos los derechos reservados</p>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="moverlay" id="authModal" onclick="closeModalOut(event)">
+  <div class="modal">
+    <button class="mcls" onclick="closeModal()">×</button>
+    <div class="mtitle">PLAY <span>NOVA</span></div>
+    <p class="msub" id="mSub">Ingresa a tu cuenta</p>
+    <div class="mtabs">
+      <button class="mtab on" id="tLogin" onclick="swTab('login')">Ingresar</button>
+      <button class="mtab" id="tReg" onclick="swTab('register')">Registrarse</button>
+    </div>
+    <div id="fLogin">
+      <div class="fg"><label class="fl">Usuario</label><input class="fi" id="lUser" placeholder="tu_usuario"></div>
+      <div class="fg"><label class="fl">Contraseña</label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="lPass" placeholder="••••••••">
+          <button type="button" class="eye-btn" onclick="toggleEye('lPass',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
+      <div id="lErr" class="ferr"></div>
+      <button class="btn btn-red" style="width:100%;padding:.7rem;margin-top:.5rem" onclick="doLogin()">Ingresar</button>
+    </div>
+    <div id="fReg" style="display:none">
+      <div class="fg"><label class="fl">Usuario <span style="color:var(--ac)">*</span></label><input class="fi" id="rUser" placeholder="solo letras, números y _"></div>
+      <div class="fg"><label class="fl">Contraseña <span style="color:var(--ac)">*</span></label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="rPass" placeholder="Mínimo 8 caracteres">
+          <button type="button" class="eye-btn" onclick="toggleEye('rPass',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Confirmar Contraseña <span style="color:var(--ac)">*</span></label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="rPass2" placeholder="Repite tu contraseña">
+          <button type="button" class="eye-btn" onclick="toggleEye('rPass2',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Teléfono <span style="color:var(--mu);font-size:.65rem">(opcional)</span></label><input class="fi" id="rPhone" placeholder="+51 9XX XXX XXX"></div>
+      <div class="fg"><label class="fl">Código referido <span style="color:var(--mu);font-size:.65rem">(opcional)</span></label><input class="fi" id="rRef" placeholder="De quien te invitó" style="text-transform:uppercase"></div>
+      <div class="fopt">✨ Registro opcional — sirve para acumular y canjear puntos gratis.</div>
+      <div id="rErr" class="ferr"></div><div id="rOk" class="fok"></div>
+      <button class="btn btn-red" style="width:100%;padding:.7rem;margin-top:.9rem" onclick="doRegister()">Crear Cuenta Gratis</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script>
+// ── MODAL ──
+function openModal(tab){document.getElementById('authModal').classList.add('open');swTab(tab);}
+function closeModal(){document.getElementById('authModal').classList.remove('open');}
+function closeModalOut(e){if(e.target.id==='authModal')closeModal();}
+function swTab(tab){
+  document.getElementById('fLogin').style.display=tab==='login'?'':'none';
+  document.getElementById('fReg').style.display=tab==='register'?'':'none';
+  document.getElementById('tLogin').classList.toggle('on',tab==='login');
+  document.getElementById('tReg').classList.toggle('on',tab==='register');
+  document.getElementById('mSub').textContent=tab==='login'?'Ingresa a tu cuenta':'Crea tu cuenta (opcional)';
+}
+
+// ── SERVICE TABS ──
+function setTab(s){
+  document.querySelectorAll('.sgrid').forEach(g=>g.classList.remove('on'));
+  document.querySelectorAll('.stab[data-s]').forEach(t=>t.classList.remove('on'));
+  document.getElementById('g-'+s).classList.add('on');
+  document.querySelector(`.stab[data-s="${s}"]`).classList.add('on');
+}
+
+// ── REGISTER ──
+async function doRegister(){
+  const user=document.getElementById('rUser').value.trim();
+  const pass=document.getElementById('rPass').value;
+  const pass2=document.getElementById('rPass2').value;
+  const phone=document.getElementById('rPhone').value.trim();
+  const ref=document.getElementById('rRef').value.trim().toUpperCase();
+  const eE=document.getElementById('rErr'),oE=document.getElementById('rOk');
+  eE.textContent='';oE.textContent='';
+  if(!user||user.length<3){eE.textContent='Mínimo 3 caracteres en el usuario';return;}
+  if(pass.length<8){eE.textContent='Contraseña mínimo 8 caracteres';return;}
+  if(pass!==pass2){eE.textContent='Las contraseñas no coinciden';return;}
+  if(!/^[a-zA-Z0-9_]+$/.test(user)){eE.textContent='Solo letras, números y _';return;}
+  const chk=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=id`,{headers:HG});
+  if((await chk.json()).length>0){eE.textContent='Ese usuario ya está en uso';return;}
+  let refId=null;
+  if(ref){
+    const rc=await fetch(`${SB}/pn_users?referral_code=eq.${encodeURIComponent(ref)}&select=id`,{headers:HG});
+    const rd=await rc.json();
+    if(!rd.length){eE.textContent='Código de referido inválido';return;}
+    refId=rd[0].id;
+  }
+  const hash=btoa(pass+'_pn_salt_2026'),code=genCode(user);
+  const res=await fetch(`${SB}/pn_users`,{method:'POST',headers:H,body:JSON.stringify({username:user,pass_hash:hash,phone:phone||null,points:0,role:'client',referral_code:code,referred_by:refId})});
+  if(res.ok){oE.textContent='¡Cuenta creada! Tu código: '+code;setTimeout(()=>swTab('login'),2500);}
+  else{const e=await res.json();eE.textContent='Error: '+(e.message||'intenta de nuevo');}
+}
+
+// ── LOGIN ──
+async function doLogin(){
+  const user=document.getElementById('lUser').value.trim();
+  const pass=document.getElementById('lPass').value;
+  const eE=document.getElementById('lErr');eE.textContent='';
+  if(user==='admin'&&pass==='playnova2026'){saveS({isAdmin:true,id:'admin'});closeModal();window.location.href='admin.html';return;}
+  if(!user||!pass){eE.textContent='Completa todos los campos';return;}
+  const hash=btoa(pass+'_pn_salt_2026');
+  const res=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&pass_hash=eq.${encodeURIComponent(hash)}&select=*`,{headers:HG});
+  const data=await res.json();
+  if(!data.length){eE.textContent='Usuario o contraseña incorrectos';return;}
+  saveS(data[0]);closeModal();window.location.href='client.html';
+}
+
+// ── AUTO-REDIRECT ON LOAD ──
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=loadS();
+  if(saved){
+    if(saved.isAdmin){window.location.href='admin.html';return;}
+    window.location.href='client.html';
+  }
+});
+</script>
+</body>
+</html>

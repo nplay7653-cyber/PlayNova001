@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Nova · Mi Cuenta</title>
+<link rel="stylesheet" href="css/client.css">
+</head>
+<body style="margin:0;padding:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;">
+
+<!-- CLIENT SIDEBAR OVERLAY -->
+<div class="client-sidebar-overlay" id="cSidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- CLIENT SIDEBAR (Gmail style) -->
+<div class="client-sidebar" id="cSidebar">
+  <div class="csb-header">
+    <div class="csb-avatar" id="csbAvatar">D</div>
+    <div class="csb-userinfo">
+      <div class="csb-username" id="csbUsername">Usuario</div>
+      <div class="csb-pts">★ <span id="csbPts">0</span> puntos</div>
+    </div>
+  </div>
+  <div class="csb-nav">
+    <div class="csb-item on" id="csb-puntos" onclick="setCTab('puntos');closeSidebar()"><span class="csb-ico">⭐</span>Mis Puntos</div>
+    <div class="csb-item" id="csb-servicios" onclick="setCTab('servicios');closeSidebar()"><span class="csb-ico">📺</span>Servicios</div>
+    <div class="csb-item" id="csb-combos" onclick="setCTab('combos');closeSidebar()"><span class="csb-ico">🔥</span>Combos</div>
+    <div class="csb-item" id="csb-historial" onclick="setCTab('historial');closeSidebar()"><span class="csb-ico">📋</span>Historial</div>
+    <div class="csb-divider"></div>
+    <div class="csb-item" style="color:var(--mu);font-size:.78rem;cursor:default;padding:.4rem 1rem">PLAY <span style="color:var(--ac)">NOVA</span></div>
+  </div>
+  <div class="csb-footer">
+    <div class="csb-logout" onclick="closeDash()">
+      <span class="csb-ico">🚪</span>Cerrar sesión
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="client-topbar">
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <button class="ham-btn" onclick="openSidebar()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo" style="font-size:1.1rem">PLAY <span>NOVA</span></div>
+    <div class="client-nav">
+      <div class="cnav-item on" data-tab="puntos" onclick="setCTab('puntos')">⭐ Mis Puntos</div>
+      <div class="cnav-item" data-tab="servicios" onclick="setCTab('servicios')">📺 Servicios</div>
+      <div class="cnav-item" data-tab="combos" onclick="setCTab('combos')">🔥 Combos</div>
+      <div class="cnav-item" data-tab="historial" onclick="setCTab('historial')">📋 Historial</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:.65rem">
+    <span class="ctb-welcome" style="font-size:.8rem;color:var(--mu)">Bienvenido, <strong id="clientUsername" style="color:var(--tx)"></strong></span>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;color:var(--go);white-space:nowrap">★ <span id="clientPts">0</span></div>
+    <button class="btn btn-out btn-sm" onclick="closeDash()" style="white-space:nowrap">Salir</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="client-body">
+
+  <!-- PUNTOS -->
+  <div class="client-panel on" id="cp-puntos">
+    <div class="pts-hero">
+      <div>
+        <div class="pts-big" id="cPtsBig">0</div>
+        <div style="font-size:.78rem;color:var(--mu);margin-top:.3rem">puntos acumulados</div>
+      </div>
+      <div class="pts-info">
+        <h3>Mis Puntos Nova</h3>
+        <p>Cada sol que gastas = 1 punto.<br>Primera compra: +30 pts de bienvenida.<br>Referido activado: +15 pts extra.</p>
+        <a id="canjearLink" href="#" target="_blank" class="btn btn-go" style="margin-top:.9rem;text-decoration:none;padding:.5rem 1.25rem">💬 Canjear por WhatsApp</a>
+      </div>
+    </div>
+    <div class="ref-code" id="cRefBox">
+      <div style="font-size:.72rem;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem;font-weight:700">Mi código de referido</div>
+      <div class="ref-code-val" id="cRefCode" onclick="copyCode()">---</div>
+      <div style="font-size:.72rem;color:var(--mu);margin-top:.4rem">Clic para copiar · Cuando tu amigo compre, ganas +15 pts</div>
+    </div>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.75rem">Mis canjes disponibles</div>
+    <div class="reward-grid" id="cRewardGrid"></div>
+  </div>
+
+  <!-- SERVICIOS -->
+  <div class="client-panel" id="cp-servicios">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:.4rem">Servicios <span style="color:var(--ac)">Disponibles</span></div>
+    <p style="color:var(--mu);font-size:.85rem;margin-bottom:1.5rem">Compra y acumula puntos · Botón directo a WhatsApp</p>
+    <div class="svc-tabs" id="cSvcTabs"></div>
+    <div id="cSvcGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem"></div>
+  </div>
+
+  <!-- COMBOS -->
+  <div class="client-panel" id="cp-combos">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:.4rem">Combos <span style="color:var(--ac)">Nova</span></div>
+    <p style="color:var(--mu);font-size:.85rem;margin-bottom:1.5rem">Más servicios · Mejor precio · Más puntos</p>
+    <div class="cgrid">
+      <div class="ccard"><div class="ctag">🔥 Más popular</div><div class="cname">Nova Básico</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix Perfil</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 20</span><span class="cold">S/ 24</span></div><div class="csave">✓ Ahorras S/ 4</div><div class="cpts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20B%C3%A1sico%20S%2F20" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+      <div class="ccard"><div class="ctag">🎬 Entretenimiento</div><div class="cname">Nova Entretenimiento</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><span class="cs" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span></div><div class="cpricing"><span class="cnew">S/ 16</span><span class="cold">S/ 18</span></div><div class="csave">✓ Ahorras S/ 2</div><div class="cpts">Gana 16 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Entretenimiento%20S%2F16" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+      <div class="ccard"><div class="ctag">👑 Premium</div><div class="cname">Nova Premium</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><span class="cs" style="background:rgba(139,0,255,.15);color:#b87fff">HBO</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 26</span><span class="cold">S/ 30</span></div><div class="csave">✓ Ahorras S/ 4</div><div class="cpts">Gana 26 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Premium%20S%2F26" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+      <div class="ccard"><div class="ctag">🌟 Todo incluido</div><div class="cname">Nova Total</div><div class="csvcs"><span class="cs" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><span class="cs" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><span class="cs" style="background:rgba(139,0,255,.15);color:#b87fff">HBO</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 31</span><span class="cold">S/ 36</span></div><div class="csave">✓ Ahorras S/ 5</div><div class="cpts">Gana 31 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Total%20S%2F31" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+      <div class="ccard"><div class="ctag">🎨 Creativo</div><div class="cname">Nova Creativo</div><div class="csvcs"><span class="cs" style="background:rgba(125,42,232,.15);color:#b280ff">Canva</span><span class="cs" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span></div><div class="cpricing"><span class="cnew">S/ 18</span><span class="cold">S/ 22</span></div><div class="csave">✓ Ahorras S/ 4</div><div class="cpts">Gana 18 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Combo%20Nova%20Creativo%20S%2F18" target="_blank" class="pbuy go">Comprar por WhatsApp</a></div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="client-panel" id="cp-historial">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:1.25rem">Mi <span style="color:var(--ac)">Historial</span></div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr><th>Fecha</th><th>Servicio</th><th>Puntos obtenidos</th></tr></thead>
+        <tbody id="cHistBody"><tr><td colspan="3" style="text-align:center;color:var(--mu);padding:2rem">Sin historial aún</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /client-body -->
+
+<script src="js/config.js"></script>
+<script src="js/client.js"></script>
+</body>
+</html>
