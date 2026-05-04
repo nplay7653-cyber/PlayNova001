@@ -174,8 +174,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* ── ADMIN DASHBOARD ── */
 #adminDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);}
-#adminDash.open{display:flex;}
-.aside{width:220px;min-width:220px;background:var(--s2);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;}
+#adminDash.open{display:block;}
+.aside{position:fixed;top:0;left:0;width:220px;background:var(--s2);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;z-index:400;}
 .aside-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--b1);}
 .aside-logo .l{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;}
 .aside-logo .l span{color:var(--ac);}
@@ -189,7 +189,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .aside-foot{padding:1rem 1.25rem;border-top:1px solid var(--b1);}
 .aside-foot .uinfo{font-size:.78rem;color:var(--mu);margin-bottom:.6rem;}
 .aside-foot .uinfo strong{color:var(--tx);display:block;}
-.dash-main{flex:1;overflow-y:auto;height:100vh;}
+.dash-main{overflow-y:auto;height:100vh;margin-left:220px;}
 .dash-topbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:.85rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
 .dash-topbar-title{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;}
 .dash-content{padding:1.75rem;max-width:1100px;}
@@ -214,7 +214,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .sale-form .fg{margin:0;flex:1;min-width:130px;}
 
 /* ── ADMIN MOBILE SIDEBAR ── */
-.admin-sidebar-overlay{display:none;position:fixed;inset:0;z-index:299;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);}
+.admin-sidebar-overlay{display:none;position:fixed;inset:0;z-index:298;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);}
 .admin-sidebar-overlay.open{display:block;}
 .admin-ham{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .2s;flex-shrink:0;}
 .admin-ham:hover{background:var(--b1);}
@@ -292,24 +292,19 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .pcard{padding:1.1rem;}
 
   /* ── ADMIN MOBILE ── */
-  /* aside becomes a hidden fixed overlay, NOT part of the flex layout */
+  #adminDash{display:block;position:fixed;inset:0;overflow:hidden;}
   .aside{
-    position:fixed !important;
-    top:0;left:-270px;
-    width:260px;height:100% !important;
-    z-index:300;
-    transition:left .28s cubic-bezier(.4,0,.2,1);
-    min-width:unset !important;
+    left:-270px !important;
+    width:260px !important;
+    transition:left .28s cubic-bezier(.4,0,.2,1) !important;
   }
-  .aside.open{left:0;}
-  /* dash-main fills the full width since aside is out of flow */
-  #adminDash{flex-direction:row;}
-  .dash-main{width:100%;height:100vh;}
+  .aside.open{left:0 !important;}
+  .dash-main{margin-left:0 !important;width:100%;height:100vh;display:flex;flex-direction:column;}
   .admin-ham{display:flex;}
-  .dash-topbar{padding:.75rem 1rem;gap:.65rem;}
+  .dash-topbar{padding:.75rem 1rem;gap:.65rem;flex-shrink:0;}
   .dash-topbar-title{font-size:1rem;}
   #dashDate{display:none;}
-  .dash-content{padding:1rem .85rem;}
+  .dash-content{padding:1rem .85rem;flex:1;overflow-y:auto;height:0;}
   .stats-grid{grid-template-columns:1fr 1fr;gap:.65rem;}
   .sval{font-size:1.5rem;}
   .sale-form{flex-direction:column;gap:.65rem;}
@@ -317,12 +312,17 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .cat-grid{grid-template-columns:1fr;}
   .dt{font-size:.75rem;}
   .dt th,.dt td{padding:.5rem .65rem;}
+  /* Fix product form grid on mobile */
+  #ap-addprod > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  .profit-preview{max-width:100%!important;}
 
   /* ── CLIENT MOBILE ── */
-  .client-topbar{padding:.6rem 1rem;gap:.5rem;}
+  #clientDash{display:none;position:fixed;inset:0;overflow:hidden;}
+  #clientDash.open{display:flex;flex-direction:column;}
+  .client-topbar{padding:.6rem 1rem;gap:.5rem;flex-shrink:0;}
   .client-nav{display:none;}
   .ham-btn{display:flex;}
-  .client-body{padding:1rem .85rem;}
+  .client-body{padding:1rem .85rem;flex:1;overflow-y:auto;height:0;}
   .pts-hero{flex-direction:column;gap:1rem;padding:1.25rem;}
   .pts-big{font-size:3rem;}
   .reward-grid{grid-template-columns:1fr 1fr;}
@@ -337,6 +337,8 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .reward-grid{grid-template-columns:1fr;}
   .modal{max-width:100%;margin:.5rem;border-radius:12px;}
   .sval{font-size:1.35rem;}
+  .nav-right .btn:first-child{display:none;}
+  .nav-right .btn{font-size:.72rem;padding:.4rem .85rem;}
 }
 </style>
 </head>
@@ -550,31 +552,33 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   </div>
 </div>
 
-<!-- ADMIN SIDEBAR OVERLAY (mobile) -->
+<!-- ADMIN SIDEBAR OVERLAY (mobile) - OUTSIDE adminDash -->
 <div class="admin-sidebar-overlay" id="adminSidebarOverlay" onclick="closeAdminSidebar()"></div>
+
+<!-- ADMIN SIDEBAR - OUTSIDE adminDash so overflow:hidden doesn't block touch -->
+<div class="aside" id="adminAside">
+  <div class="aside-logo"><div class="l">PLAY <span>NOVA</span></div><div class="sub">Panel de Administración</div></div>
+  <div class="amenu">
+    <div class="amenu-section">General</div>
+    <div class="amitem on" onclick="setAdminTab('resumen');closeAdminSidebar()"><span class="ico">📊</span>Resumen</div>
+    <div class="amenu-section">Ventas</div>
+    <div class="amitem" onclick="setAdminTab('venta');closeAdminSidebar()"><span class="ico">🛒</span>Registrar Venta</div>
+    <div class="amitem" onclick="setAdminTab('historial');closeAdminSidebar()"><span class="ico">📋</span>Historial</div>
+    <div class="amenu-section">Catálogo</div>
+    <div class="amitem" onclick="setAdminTab('productos');closeAdminSidebar()"><span class="ico">📦</span>Productos</div>
+    <div class="amitem" onclick="setAdminTab('addprod');closeAdminSidebar()"><span class="ico">➕</span>Agregar Producto</div>
+    <div class="amitem" onclick="setAdminTab('categorias');closeAdminSidebar()"><span class="ico">🏷️</span>Categorías</div>
+    <div class="amenu-section">Clientes</div>
+    <div class="amitem" onclick="setAdminTab('clientes');closeAdminSidebar()"><span class="ico">👥</span>Ver Clientes</div>
+  </div>
+  <div class="aside-foot">
+    <div class="uinfo"><strong>Administrador</strong>Play Nova</div>
+    <button class="btn btn-out btn-sm" onclick="closeDash()" style="width:100%;justify-content:center">🚪 Cerrar sesión</button>
+  </div>
+</div>
 
 <!-- ADMIN DASHBOARD -->
 <div id="adminDash">
-  <div class="aside" id="adminAside">
-    <div class="aside-logo"><div class="l">PLAY <span>NOVA</span></div><div class="sub">Panel de Administración</div></div>
-    <div class="amenu">
-      <div class="amenu-section">General</div>
-      <div class="amitem on" onclick="setAdminTab('resumen');closeAdminSidebar()"><span class="ico">📊</span>Resumen</div>
-      <div class="amenu-section">Ventas</div>
-      <div class="amitem" onclick="setAdminTab('venta');closeAdminSidebar()"><span class="ico">🛒</span>Registrar Venta</div>
-      <div class="amitem" onclick="setAdminTab('historial');closeAdminSidebar()"><span class="ico">📋</span>Historial</div>
-      <div class="amenu-section">Catálogo</div>
-      <div class="amitem" onclick="setAdminTab('productos');closeAdminSidebar()"><span class="ico">📦</span>Productos</div>
-      <div class="amitem" onclick="setAdminTab('addprod');closeAdminSidebar()"><span class="ico">➕</span>Agregar Producto</div>
-      <div class="amitem" onclick="setAdminTab('categorias');closeAdminSidebar()"><span class="ico">🏷️</span>Categorías</div>
-      <div class="amenu-section">Clientes</div>
-      <div class="amitem" onclick="setAdminTab('clientes');closeAdminSidebar()"><span class="ico">👥</span>Ver Clientes</div>
-    </div>
-    <div class="aside-foot">
-      <div class="uinfo"><strong>Administrador</strong>Play Nova</div>
-      <button class="btn btn-out btn-sm" onclick="closeDash()" style="width:100%;justify-content:center">🚪 Cerrar sesión</button>
-    </div>
-  </div>
   <div class="dash-main">
     <div class="dash-topbar">
       <div style="display:flex;align-items:center;gap:.75rem">
