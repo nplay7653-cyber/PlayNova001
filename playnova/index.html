@@ -332,22 +332,77 @@ window.addEventListener('DOMContentLoaded', () => {
   loadCatLogos();
 
 
+// ══════════════════════════════════════════════════════
+// FIX: loadCatLogos corregido para index.html
+// REEMPLAZA la función loadCatLogos que ya tienes
+// ══════════════════════════════════════════════════════
+
 async function loadCatLogos() {
   try {
     const r = await fetch(`${SB}/pn_categories?select=slug,name,image_url,emoji,color&order=name`, { headers: HG });
     if (!r.ok) return;
     const cats = await r.json();
+
     cats.forEach(cat => {
       if (!cat.image_url) return;
       const tab = document.querySelector(`.stab[data-s="${cat.slug}"]`);
       if (!tab) return;
-      // Reemplaza el texto con imagen + nombre
-      tab.innerHTML = `<img src="${cat.image_url}" alt="${cat.name}"
-        style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px;display:inline-block"
-        onerror="this.style.display='none'">${cat.name}`;
+
+      // Quitar clase de color de marca (data-s) para que no tape la imagen
+      tab.removeAttribute('data-s');
+      tab.setAttribute('data-slug', cat.slug);
+
+      // Restaurar onclick con el slug correcto
+      tab.onclick = () => setTab(cat.slug);
+
+      // Poner imagen + nombre
+      tab.innerHTML = `
+        <img src="${cat.image_url}" alt="${cat.name}"
+          style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:6px;display:inline-block;filter:brightness(0) invert(1)"
+          onerror="this.style.display='none'">
+        ${cat.name}`;
+
+      // Estilo activo con color de la marca en borde, no fondo
+      tab.style.cssText = '';
+      const color = cat.color || 'var(--ac)';
+
+      // Si esta tab está activa, aplicar borde de color en vez de fondo
+      if (tab.classList.contains('on')) {
+        tab.style.borderColor = color;
+        tab.style.color = color;
+        tab.style.background = `${color}18`;
+      }
+
+      // Override del estado on/off para esta tab
+      const origSetTab = window.setTab;
+      window._catColors = window._catColors || {};
+      window._catColors[cat.slug] = color;
     });
+
+    // Sobreescribir setTab para manejar tabs con imagen
+    const _orig = window.setTab;
+    window.setTab = function(s) {
+      _orig(s);
+      // Reset todas las tabs con imagen
+      document.querySelectorAll('.stab[data-slug]').forEach(t => {
+        const slug = t.getAttribute('data-slug');
+        const col  = (window._catColors || {})[slug] || 'var(--ac)';
+        if (slug === s) {
+          t.classList.add('on');
+          t.style.borderColor = col;
+          t.style.color = col;
+          t.style.background = col + '18';
+        } else {
+          t.classList.remove('on');
+          t.style.borderColor = '';
+          t.style.color = '';
+          t.style.background = '';
+        }
+      });
+    };
+
   } catch (e) {
-    // Si falla, las tabs quedan con texto normal — no pasa nada
+    console.log('loadCatLogos error:', e);
   }
 }
 
