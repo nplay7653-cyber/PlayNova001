@@ -1,14 +1,7 @@
 // ── CLIENT STATE ──
 let me = null, cats = [], clientProds = [], curCSvc = 'netflix';
 
-const REWARDS = [
-  { name: 'Crunchyroll Perfil', pts: 50, color: 'var(--cr)' },
-  { name: 'HBO Max Perfil', pts: 50, color: 'var(--hb)' },
-  { name: 'Disney+ Perfil', pts: 60, color: 'var(--ds)' },
-  { name: 'Netflix Perfil', pts: 100, color: 'var(--nf)' },
-  { name: 'Spotify Individual', pts: 150, color: 'var(--sp)' },
-  { name: 'ChatGPT Go', pts: 200, color: 'var(--gp)' },
-];
+// REWARDS ya no es un array estático — se carga desde pn_rewards
 
 // ── SIDEBAR ──
 function openSidebar() {
@@ -88,13 +81,73 @@ function renderClientSvc(cat) {
     </div>`).join('') || '<div style="color:var(--mu);font-size:.85rem;padding:1rem">Sin productos en esta categoría.</div>';
 }
 
-// ── REWARDS ──
-function renderRewards() {
+// ── REWARDS (dinámico desde pn_rewards) ──
+async function loadAndRenderRewards() {
+  const grid = document.getElementById('cRewardGrid');
   const pts = me.points || 0;
-  document.getElementById('cRewardGrid').innerHTML = REWARDS.map(r => {
-    const ok = pts >= r.pts, diff = r.pts - pts;
-    return `<div class="rcard${ok ? ' can' : ''}"><div class="rcard-name" style="color:${r.color}">${r.name}</div><div class="rcard-pts">${r.pts} <small>pts</small></div><div class="rcard-status ${ok ? 'ok' : 'no'}">${ok ? '✓ ¡Puedes canjear!' : 'Faltan ' + diff + ' pts'}</div></div>`;
-  }).join('');
+
+  // Skeleton mientras carga
+  grid.innerHTML = `
+    <div style="color:var(--mu);font-size:.82rem;padding:.5rem 0;grid-column:1/-1">Cargando premios...</div>
+  `;
+
+  try {
+    const r = await fetch(`${SB}/pn_rewards?active=eq.true&select=*&order=points_required`, { headers: HG });
+
+    if (!r.ok) throw new Error('fetch');
+    const rewards = await r.json();
+
+    if (!rewards.length) {
+      grid.innerHTML = `<div style="color:var(--mu);font-size:.82rem;grid-column:1/-1;padding:.5rem 0">No hay premios disponibles por ahora.</div>`;
+      return;
+    }
+
+    grid.innerHTML = rewards.map(rw => {
+      const color = rw.color  || 'var(--go)';
+      const emoji = rw.emoji  || '🎁';
+      const ok    = pts >= rw.points_required;
+      const diff  = rw.points_required - pts;
+      return `
+        <div class="rcard${ok ? ' can' : ''}">
+          <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem">
+            <span style="font-size:1.1rem">${emoji}</span>
+            <div class="rcard-name" style="color:${color}">${rw.name}</div>
+          </div>
+          ${rw.description ? `<div style="font-size:.72rem;color:var(--mu);margin-bottom:.3rem">${rw.description}</div>` : ''}
+          <div class="rcard-pts" style="color:${color}">${rw.points_required} <small>pts</small></div>
+          <div class="rcard-status ${ok ? 'ok' : 'no'}">
+            ${ok
+              ? '✓ ¡Puedes canjear!'
+              : `Faltan ${diff} pts`
+            }
+          </div>
+        </div>`;
+    }).join('');
+
+  } catch (e) {
+    // Fallback al array estático si falla la DB
+    const REWARDS_FALLBACK = [
+      { name: 'Crunchyroll Perfil', points_required: 50,  color: 'var(--cr)', emoji: '🍊' },
+      { name: 'HBO Max Perfil',     points_required: 50,  color: 'var(--hb)', emoji: '🟣' },
+      { name: 'Disney+ Perfil',     points_required: 60,  color: 'var(--ds)', emoji: '🔵' },
+      { name: 'Netflix Perfil',     points_required: 100, color: 'var(--nf)', emoji: '🔴' },
+      { name: 'Spotify Individual', points_required: 150, color: 'var(--sp)', emoji: '🎵' },
+      { name: 'ChatGPT Go',         points_required: 200, color: 'var(--gp)', emoji: '🤖' },
+    ];
+    grid.innerHTML = REWARDS_FALLBACK.map(rw => {
+      const ok   = pts >= rw.points_required;
+      const diff = rw.points_required - pts;
+      return `
+        <div class="rcard${ok ? ' can' : ''}">
+          <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.25rem">
+            <span style="font-size:1.1rem">${rw.emoji || '🎁'}</span>
+            <div class="rcard-name" style="color:${rw.color}">${rw.name}</div>
+          </div>
+          <div class="rcard-pts" style="color:${rw.color}">${rw.points_required} <small>pts</small></div>
+          <div class="rcard-status ${ok ? 'ok' : 'no'}">${ok ? '✓ ¡Puedes canjear!' : 'Faltan ' + diff + ' pts'}</div>
+        </div>`;
+    }).join('');
+  }
 }
 
 // ── HISTORY ──
@@ -142,8 +195,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('csbUsername').textContent = me.username;
   document.getElementById('csbPts').textContent = me.points || 0;
   syncSidebar('puntos');
-  renderRewards();
-  await loadCats();
-  await loadClientSvcs();
-  await loadCHist();
+
+  // Carga en paralelo
+  await Promise.all([
+    loadAndRenderRewards(),
+    loadCats().then(() => loadClientSvcs()),
+    loadCHist()
+  ]);
 });
