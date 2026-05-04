@@ -1,8 +1,6 @@
 // ── CLIENT STATE ──
 let me = null, cats = [], clientProds = [], curCSvc = 'netflix';
 
-// REWARDS ya no es un array estático — se carga desde pn_rewards
-
 // ── SIDEBAR ──
 function openSidebar() {
   document.getElementById('cSidebar').classList.add('open');
@@ -45,34 +43,55 @@ async function loadClientSvcs() {
   const r = await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`, { headers: HG });
   if (!r.ok) return;
   clientProds = await r.json();
+
   const groups = {};
   clientProds.forEach(p => { if (!groups[p.category]) groups[p.category] = []; groups[p.category].push(p); });
+
   const tabsEl = document.getElementById('cSvcTabs'); if (!tabsEl) return;
   tabsEl.innerHTML = '';
+
   const catKeys = Object.keys(groups);
   catKeys.forEach((cat, i) => {
     const catObj = cats.find(c => c.slug === cat);
-    const label = catObj ? `${catObj.emoji || ''}${catObj.name}` : (cat.charAt(0).toUpperCase() + cat.slice(1));
     const tab = document.createElement('div');
     tab.className = 'stab' + (i === 0 ? ' on' : '');
     tab.setAttribute('data-cs', cat);
-    tab.textContent = label;
+
+    // Si tiene image_url usar imagen, si no emoji/texto
+    if (catObj && catObj.image_url) {
+      tab.innerHTML = `<img src="${catObj.image_url}" alt="${catObj.name}"
+        style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:5px"
+        onerror="this.style.display='none'">${catObj.name}`;
+    } else {
+      const label = catObj ? `${catObj.emoji || ''}${catObj.name}` : (cat.charAt(0).toUpperCase() + cat.slice(1));
+      tab.textContent = label;
+    }
+
     tab.onclick = () => { setCTab('servicios'); renderClientSvc(cat); };
     tabsEl.appendChild(tab);
   });
+
   if (catKeys.length) renderClientSvc(catKeys[0]);
 }
 
 function renderClientSvc(cat) {
-  document.querySelectorAll('#cSvcTabs .stab').forEach(t => { t.classList.toggle('on', t.getAttribute('data-cs') === cat); });
+  document.querySelectorAll('#cSvcTabs .stab').forEach(t => {
+    t.classList.toggle('on', t.getAttribute('data-cs') === cat);
+  });
   curCSvc = cat;
   const catProds = clientProds.filter(p => p.category === cat);
-  const catObj = cats.find(c => c.slug === cat);
-  const color = catObj ? (catObj.color || 'var(--ac)') : 'var(--ac)';
+  const catObj   = cats.find(c => c.slug === cat);
+  const color    = catObj ? (catObj.color || 'var(--ac)') : 'var(--ac)';
+
+  // Badge: imagen o emoji+nombre
+  const badgeContent = (catObj && catObj.image_url)
+    ? `<img src="${catObj.image_url}" alt="${catObj.name}" style="height:14px;object-fit:contain;vertical-align:middle;margin-right:4px" onerror="this.style.display='none'">${catObj.name}`
+    : (catObj ? `${catObj.emoji || ''}${catObj.name}` : cat);
+
   const grid = document.getElementById('cSvcGrid');
   grid.innerHTML = catProds.map(c => `
     <div class="pcard" data-s="${cat}">
-      <span class="pbadge" style="background:${color}22;color:${color}">${catObj ? (catObj.emoji || '') + catObj.name : cat}</span>
+      <span class="pbadge" style="background:${color}22;color:${color}">${badgeContent}</span>
       <div class="pname">${c.name}</div>
       <div class="pdesc">${c.description || ''}</div>
       <div class="pprice"><span class="cy">S/</span><span class="am">${Number(c.sale_price).toFixed(2)}</span><span class="pe">/mes</span></div>
@@ -81,30 +100,22 @@ function renderClientSvc(cat) {
     </div>`).join('') || '<div style="color:var(--mu);font-size:.85rem;padding:1rem">Sin productos en esta categoría.</div>';
 }
 
-// ── REWARDS (dinámico desde pn_rewards) ──
+// ── REWARDS ──
 async function loadAndRenderRewards() {
   const grid = document.getElementById('cRewardGrid');
   const pts = me.points || 0;
-
-  // Skeleton mientras carga
-  grid.innerHTML = `
-    <div style="color:var(--mu);font-size:.82rem;padding:.5rem 0;grid-column:1/-1">Cargando premios...</div>
-  `;
-
+  grid.innerHTML = `<div style="color:var(--mu);font-size:.82rem;padding:.5rem 0;grid-column:1/-1">Cargando premios...</div>`;
   try {
     const r = await fetch(`${SB}/pn_rewards?active=eq.true&select=*&order=points_required`, { headers: HG });
-
     if (!r.ok) throw new Error('fetch');
     const rewards = await r.json();
-
     if (!rewards.length) {
       grid.innerHTML = `<div style="color:var(--mu);font-size:.82rem;grid-column:1/-1;padding:.5rem 0">No hay premios disponibles por ahora.</div>`;
       return;
     }
-
     grid.innerHTML = rewards.map(rw => {
-      const color = rw.color  || 'var(--go)';
-      const emoji = rw.emoji  || '🎁';
+      const color = rw.color || 'var(--go)';
+      const emoji = rw.emoji || '🎁';
       const ok    = pts >= rw.points_required;
       const diff  = rw.points_required - pts;
       return `
@@ -115,17 +126,10 @@ async function loadAndRenderRewards() {
           </div>
           ${rw.description ? `<div style="font-size:.72rem;color:var(--mu);margin-bottom:.3rem">${rw.description}</div>` : ''}
           <div class="rcard-pts" style="color:${color}">${rw.points_required} <small>pts</small></div>
-          <div class="rcard-status ${ok ? 'ok' : 'no'}">
-            ${ok
-              ? '✓ ¡Puedes canjear!'
-              : `Faltan ${diff} pts`
-            }
-          </div>
+          <div class="rcard-status ${ok ? 'ok' : 'no'}">${ok ? '✓ ¡Puedes canjear!' : `Faltan ${diff} pts`}</div>
         </div>`;
     }).join('');
-
   } catch (e) {
-    // Fallback al array estático si falla la DB
     const REWARDS_FALLBACK = [
       { name: 'Crunchyroll Perfil', points_required: 50,  color: 'var(--cr)', emoji: '🍊' },
       { name: 'HBO Max Perfil',     points_required: 50,  color: 'var(--hb)', emoji: '🟣' },
@@ -154,7 +158,9 @@ async function loadAndRenderRewards() {
 async function loadCHist() {
   const r = await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(me.username)}&select=*&order=created_at.desc`, { headers: HG });
   const hist = await r.json();
-  document.getElementById('cHistBody').innerHTML = hist.length ? hist.map(h => `<tr><td style="color:var(--mu);font-size:.78rem">${new Date(h.created_at).toLocaleDateString('es-PE')}</td><td>${h.service_name}</td><td><span class="tag tag-y">+${h.points_given} pts</span></td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;color:var(--mu);padding:2rem">Sin historial aún</td></tr>';
+  document.getElementById('cHistBody').innerHTML = hist.length
+    ? hist.map(h => `<tr><td style="color:var(--mu);font-size:.78rem">${new Date(h.created_at).toLocaleDateString('es-PE')}</td><td>${h.service_name}</td><td><span class="tag tag-y">+${h.points_given} pts</span></td></tr>`).join('')
+    : '<tr><td colspan="3" style="text-align:center;color:var(--mu);padding:2rem">Sin historial aún</td></tr>';
 }
 
 // ── COPY CODE ──
@@ -184,19 +190,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     me = d[0]; saveS(me);
   } catch (e) { clearS(); window.location.href = 'index.html'; return; }
 
-  // Fill UI
   document.getElementById('clientUsername').textContent = me.username;
-  document.getElementById('clientPts').textContent = me.points || 0;
-  document.getElementById('cPtsBig').textContent = me.points || 0;
-  document.getElementById('cRefCode').textContent = me.referral_code || '—';
+  document.getElementById('clientPts').textContent      = me.points || 0;
+  document.getElementById('cPtsBig').textContent        = me.points || 0;
+  document.getElementById('cRefCode').textContent       = me.referral_code || '—';
   document.getElementById('canjearLink').href = `https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(me.username)}%20y%20quiero%20canjear%20mis%20puntos%20(tengo%20${me.points || 0}%20pts)`;
   const initials = (me.username || '?').charAt(0).toUpperCase();
-  document.getElementById('csbAvatar').textContent = initials;
+  document.getElementById('csbAvatar').textContent  = initials;
   document.getElementById('csbUsername').textContent = me.username;
-  document.getElementById('csbPts').textContent = me.points || 0;
+  document.getElementById('csbPts').textContent      = me.points || 0;
   syncSidebar('puntos');
 
-  // Carga en paralelo
   await Promise.all([
     loadAndRenderRewards(),
     loadCats().then(() => loadClientSvcs()),
