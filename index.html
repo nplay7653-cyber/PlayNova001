@@ -805,6 +805,7 @@ const SB='https://kyqzsnugnvnucxfymrwu.supabase.co/rest/v1';
 const KEY='sb_publishable_04dv96Cr06MtNRxSObmpHQ_HwZkIdYZ';
 const WA='51924606154';
 const H={'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY,Prefer:'return=representation'};
+const HG={apikey:KEY,Authorization:'Bearer '+KEY};
 let me=null, prods=[], curCSvc='netflix', clientProds=[], cats=[];
 
 // ── EYE TOGGLE ──
@@ -906,7 +907,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(saved){
     if(saved.isAdmin){openAdmin();return;}
     try{
-      const r=await fetch(`${SB}/pn_users?id=eq.${saved.id}&select=*`,{headers:H});
+      const r=await fetch(`${SB}/pn_users?id=eq.${saved.id}&select=*`,{headers:HG});
       const d=await r.json();
       if(d.length){me=d[0];saveS(me);openClient();}
       else clearS();
@@ -950,11 +951,11 @@ async function doRegister(){
   if(pass.length<8){eE.textContent='Contraseña mínimo 8 caracteres';return;}
   if(pass!==pass2){eE.textContent='Las contraseñas no coinciden';return;}
   if(!/^[a-zA-Z0-9_]+$/.test(user)){eE.textContent='Solo letras, números y _';return;}
-  const chk=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=id`,{headers:H});
+  const chk=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=id`,{headers:HG});
   if((await chk.json()).length>0){eE.textContent='Ese usuario ya está en uso';return;}
   let refId=null;
   if(ref){
-    const rc=await fetch(`${SB}/pn_users?referral_code=eq.${encodeURIComponent(ref)}&select=id`,{headers:H});
+    const rc=await fetch(`${SB}/pn_users?referral_code=eq.${encodeURIComponent(ref)}&select=id`,{headers:HG});
     const rd=await rc.json();
     if(!rd.length){eE.textContent='Código de referido inválido';return;}
     refId=rd[0].id;
@@ -973,7 +974,7 @@ async function doLogin(){
   if(user==='admin'&&pass==='playnova2026'){saveS({isAdmin:true,id:'admin'});closeModal();openAdmin();return;}
   if(!user||!pass){eE.textContent='Completa todos los campos';return;}
   const hash=btoa(pass+'_pn_salt_2026');
-  const res=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&pass_hash=eq.${encodeURIComponent(hash)}&select=*`,{headers:H});
+  const res=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&pass_hash=eq.${encodeURIComponent(hash)}&select=*`,{headers:HG});
   const data=await res.json();
   if(!data.length){eE.textContent='Usuario o contraseña incorrectos';return;}
   me=data[0];saveS(me);closeModal();openClient();
@@ -1001,7 +1002,9 @@ function setAdminTab(tab){
 }
 
 async function loadStats(){
-  const[sR,cR]=await Promise.all([fetch(`${SB}/pn_sales?select=*&order=created_at.desc`,{headers:H}),fetch(`${SB}/pn_users?role=eq.client&select=id`,{headers:H})]);
+  try{
+  const[sR,cR]=await Promise.all([fetch(`${SB}/pn_sales?select=*&order=created_at.desc`,{headers:HG}),fetch(`${SB}/pn_users?role=eq.client&select=id`,{headers:HG})]);
+  if(!sR.ok||!cR.ok){throw new Error('fetch error');}
   const sales=await sR.json(),clients=await cR.json();
   let inc=0,cost=0,pts=0;
   sales.forEach(s=>{inc+=Number(s.sale_price)||0;cost+=Number(s.cost_price)||0;pts+=Number(s.points_given)||0;});
@@ -1017,9 +1020,13 @@ async function loadStats(){
     const profit=(Number(s.sale_price)-Number(s.cost_price)).toFixed(2);
     return `<tr><td style="color:var(--mu);font-size:.78rem">${new Date(s.created_at).toLocaleDateString('es-PE')}</td><td><strong>${s.client_username}</strong></td><td>${s.service_name}</td><td style="color:var(--sp)">S/ ${Number(s.sale_price).toFixed(2)}</td><td style="color:var(--go)">S/ ${profit}</td><td><span class="tag tag-y">+${s.points_given}</span></td></tr>`;
   }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--mu);padding:1.5rem">Sin ventas aún</td></tr>';
+  }catch(e){
+    console.error('loadStats error:',e);
+    document.getElementById('recentSales').innerHTML='<tr><td colspan="6" style="text-align:center;padding:1.5rem"><span style="color:#ff6b6b">Error al cargar datos.</span> <button onclick="loadStats()" style="background:var(--ac);color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;cursor:pointer;margin-left:.5rem">Reintentar</button></td></tr>';
+  }
 }
 async function loadHistory(){
-  const r=await fetch(`${SB}/pn_sales?select=*&order=created_at.desc`,{headers:H});
+  const r=await fetch(`${SB}/pn_sales?select=*&order=created_at.desc`,{headers:HG});
   const sales=await r.json();
   const b=document.getElementById('salesBody');
   b.innerHTML=sales.length?sales.map(s=>{
@@ -1028,7 +1035,7 @@ async function loadHistory(){
   }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--mu);padding:2rem">Sin ventas</td></tr>';
 }
 async function loadClients(){
-  const r=await fetch(`${SB}/pn_users?role=eq.client&select=*&order=created_at.desc`,{headers:H});
+  const r=await fetch(`${SB}/pn_users?role=eq.client&select=*&order=created_at.desc`,{headers:HG});
   const cls=await r.json();
   const b=document.getElementById('clientsBody');
   b.innerHTML=cls.length?cls.map(c=>`<tr><td><strong>${c.username}</strong></td><td style="color:var(--mu)">${c.phone||'—'}</td><td><span class="tag tag-y">★ ${c.points}</span></td><td style="color:var(--mu);font-size:.78rem">${c.referred_by?'✓ Sí':'—'}</td><td style="font-family:monospace;font-size:.78rem;color:var(--go)">${c.referral_code||'—'}</td><td style="color:var(--mu);font-size:.78rem">${new Date(c.created_at).toLocaleDateString('es-PE')}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mu);padding:2rem">Sin clientes</td></tr>';
@@ -1036,7 +1043,7 @@ async function loadClients(){
 
 // ── PRODUCTS ──
 async function loadProdsDropdown(){
-  const r=await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`,{headers:H});
+  const r=await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`,{headers:HG});
   if(!r.ok)return;
   prods=await r.json();
   const sel=document.getElementById('apProduct');
@@ -1074,7 +1081,7 @@ function updateProdCatSelect(){
 // ── CATEGORIES ──
 async function loadCats(){
   try{
-    const r=await fetch(`${SB}/pn_categories?select=*&order=name`,{headers:H});
+    const r=await fetch(`${SB}/pn_categories?select=*&order=name`,{headers:HG});
     if(r.ok){cats=await r.json();}
     else{
       // table might not exist yet — use static defaults
@@ -1139,7 +1146,7 @@ async function deleteCat(id,name){
 
 // ── CLIENT SERVICES FROM DB ──
 async function loadClientSvcs(){
-  const r=await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`,{headers:H});
+  const r=await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`,{headers:HG});
   if(!r.ok)return;
   clientProds=await r.json();
   // group by category
@@ -1178,7 +1185,7 @@ function renderClientSvc(cat){
     </div>`).join('')||'<div style="color:var(--mu);font-size:.85rem;padding:1rem">Sin productos en esta categoría.</div>';
 }
 async function loadProductsTable(){
-  const r=await fetch(`${SB}/pn_products?select=*&order=category,name`,{headers:H});
+  const r=await fetch(`${SB}/pn_products?select=*&order=category,name`,{headers:HG});
   if(!r.ok)return;
   const ps=await r.json();
   const b=document.getElementById('prodBody');
@@ -1237,7 +1244,7 @@ async function addPoints(){
   const mE=document.getElementById('apMsg');mE.style.color='#ff6b6b';mE.textContent='';
   if(!user||!pid||isNaN(sale)||isNaN(cost)){mE.textContent='Selecciona usuario y servicio';return;}
   const prod=prods.find(x=>x.id===pid);
-  const cR=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=*`,{headers:H});
+  const cR=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=*`,{headers:HG});
   const cls=await cR.json();
   if(!cls.length){mE.textContent='Cliente no encontrado';return;}
   const client=cls[0];
@@ -1245,7 +1252,7 @@ async function addPoints(){
   if(isFirst){
     bonusPts=30;notes='Primera compra · +30 bienvenida';
     if(client.referred_by){
-      const rR=await fetch(`${SB}/pn_users?id=eq.${client.referred_by}&select=id,points,username`,{headers:H});
+      const rR=await fetch(`${SB}/pn_users?id=eq.${client.referred_by}&select=id,points,username`,{headers:HG});
       const refs=await rR.json();
       if(refs.length){
         const ref=refs[0];
@@ -1301,7 +1308,7 @@ function renderRewards(){
   }).join('');
 }
 async function loadCHist(){
-  const r=await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(me.username)}&select=*&order=created_at.desc`,{headers:H});
+  const r=await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(me.username)}&select=*&order=created_at.desc`,{headers:HG});
   const hist=await r.json();
   document.getElementById('cHistBody').innerHTML=hist.length?hist.map(h=>`<tr><td style="color:var(--mu);font-size:.78rem">${new Date(h.created_at).toLocaleDateString('es-PE')}</td><td>${h.service_name}</td><td><span class="tag tag-y">+${h.points_given} pts</span></td></tr>`).join(''):'<tr><td colspan="3" style="text-align:center;color:var(--mu);padding:2rem">Sin historial aún</td></tr>';
 }
