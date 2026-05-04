@@ -507,7 +507,7 @@ async function checkFirstPurchase() {
 
 
 // ══════════════════════════════════════════════════════
-// PATCH: Paleta de colores + Preview de imagen por URL
+// PATCH v2: Paleta de colores + image_url en categorías
 // Pega este bloque al FINAL de tu admin.js
 // ══════════════════════════════════════════════════════
 
@@ -544,16 +544,18 @@ function injectPatchCSS() {
     .cp-preview-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;}
     .cp-preview-box{width:24px;height:24px;border-radius:4px;border:1px solid rgba(255,255,255,.15);flex-shrink:0;}
     .cp-hex-text{font-size:.72rem;color:var(--mu);}
-    .img-url-row{display:flex;gap:.45rem;align-items:center;margin-top:.35rem;}
-    .img-url-row .fi{flex:1;font-size:.8rem;}
+    .img-url-row{margin-top:.35rem;}
+    .img-url-row .fi{width:100%;font-size:.8rem;}
     .img-preview-wrap{margin-top:.45rem;display:none;align-items:center;gap:.65rem;background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:.5rem .75rem;}
     .img-preview-wrap img{width:40px;height:40px;object-fit:contain;border-radius:5px;background:rgba(255,255,255,.06);}
-    .img-preview-wrap .img-hint{font-size:.72rem;color:var(--mu);line-height:1.5;}
+    .img-hint{font-size:.72rem;color:var(--mu);line-height:1.5;}
     .img-err{font-size:.72rem;color:#ff6b6b;margin-top:.3rem;}
+    .cat-card-img{width:22px;height:22px;object-fit:contain;border-radius:3px;}
   `;
   document.head.appendChild(s);
 }
 
+// ── PALETA ────────────────────────────────────────────
 function buildPalette(targetId) {
   if (document.getElementById('palette_' + targetId)) return;
   const brands = BRAND_COLORS.map(c =>
@@ -591,53 +593,172 @@ function updatePreviewBox(targetId) {
   if (box && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(val)) box.style.background = val;
 }
 
-function buildImgField(emojiInputId, uid) {
-  if (document.getElementById('imgf_' + uid)) return;
-  const html = `<div id="imgf_${uid}" style="margin-top:.45rem">
-    <div class="cp-section-label">Vista previa de imagen (pega URL)</div>
-    <div class="img-url-row">
-      <input class="fi" id="imgurl_${uid}" placeholder="https://logo.clearbit.com/netflix.com" oninput="previewImg('${uid}')">
+// ── CAMPO IMAGE URL para categorías ──────────────────
+function buildCatImageField() {
+  if (document.getElementById('cat_imgfield')) return;
+  const html = `<div id="cat_imgfield" style="margin-top:.75rem;grid-column:1/-1">
+    <label class="fl">Imagen / Logo URL</label>
+    <input class="fi" id="catImageUrl" placeholder="https://cdn.worldvectorlogo.com/logos/netflix-4.svg" oninput="previewCatImg()">
+    <div class="img-preview-wrap" id="catImgPreview">
+      <img id="catImgThumb" src="" alt="preview" onerror="catImgError()">
+      <div class="img-hint">Vista previa · esta imagen aparecerá en las tabs de servicios</div>
     </div>
-    <div class="img-preview-wrap" id="imgprev_${uid}">
-      <img id="imgthumb_${uid}" src="" alt="preview" onerror="imgError('${uid}')">
-      <div class="img-hint">Imagen cargada · escribe el emoji arriba 👆</div>
-    </div>
-    <div class="img-err" id="imgerr_${uid}"></div>
+    <div class="img-err" id="catImgErr"></div>
   </div>`;
-  const inp = document.getElementById(emojiInputId);
-  if (!inp) return;
-  const parent = inp.closest('.fg');
-  if (parent) parent.insertAdjacentHTML('afterend', html);
+
+  // Insertar dentro del grid de campos de categoría
+  const grid = document.querySelector('#ap-categorias > div > div[style*="grid"]');
+  if (grid) grid.insertAdjacentHTML('beforeend', html);
 }
 
-function previewImg(uid) {
-  const url = (document.getElementById('imgurl_' + uid) || {}).value || '';
-  const wrap = document.getElementById('imgprev_' + uid);
-  const thumb = document.getElementById('imgthumb_' + uid);
-  const err = document.getElementById('imgerr_' + uid);
+function previewCatImg() {
+  const url = (document.getElementById('catImageUrl') || {}).value || '';
+  const wrap = document.getElementById('catImgPreview');
+  const thumb = document.getElementById('catImgThumb');
+  const err = document.getElementById('catImgErr');
   if (err) err.textContent = '';
   if (!url) { if (wrap) wrap.style.display = 'none'; return; }
   thumb.src = url;
   wrap.style.display = 'flex';
 }
 
-function imgError(uid) {
-  const wrap = document.getElementById('imgprev_' + uid);
-  const err = document.getElementById('imgerr_' + uid);
+function catImgError() {
+  const wrap = document.getElementById('catImgPreview');
+  const err = document.getElementById('catImgErr');
   if (wrap) wrap.style.display = 'none';
   if (err) err.textContent = 'No se pudo cargar la imagen. Verifica la URL.';
 }
 
+// ── CAMPO IMAGE URL para premios ──────────────────────
+function buildRewardImageField() {
+  if (document.getElementById('reward_imgfield')) return;
+  const html = `<div id="reward_imgfield" style="margin-top:.45rem">
+    <div class="cp-section-label">Vista previa de imagen (pega URL)</div>
+    <div class="img-url-row">
+      <input class="fi" id="rewardImgUrl" placeholder="https://cdn.worldvectorlogo.com/logos/netflix-4.svg" oninput="previewRewardImg()">
+    </div>
+    <div class="img-preview-wrap" id="rewardImgPreview">
+      <img id="rewardImgThumb" src="" alt="preview" onerror="rewardImgError()">
+      <div class="img-hint">Vista previa · escribe el emoji arriba 👆</div>
+    </div>
+    <div class="img-err" id="rewardImgErr"></div>
+  </div>`;
+  const inp = document.getElementById('rewardEmoji');
+  if (!inp) return;
+  const parent = inp.closest('.fg');
+  if (parent) parent.insertAdjacentHTML('afterend', html);
+}
+
+function previewRewardImg() {
+  const url = (document.getElementById('rewardImgUrl') || {}).value || '';
+  const wrap = document.getElementById('rewardImgPreview');
+  const thumb = document.getElementById('rewardImgThumb');
+  const err = document.getElementById('rewardImgErr');
+  if (err) err.textContent = '';
+  if (!url) { if (wrap) wrap.style.display = 'none'; return; }
+  thumb.src = url;
+  wrap.style.display = 'flex';
+}
+
+function rewardImgError() {
+  const wrap = document.getElementById('rewardImgPreview');
+  const err = document.getElementById('rewardImgErr');
+  if (wrap) wrap.style.display = 'none';
+  if (err) err.textContent = 'No se pudo cargar la imagen. Verifica la URL.';
+}
+
+// ── OVERRIDE saveCat para guardar image_url ───────────
+// Reemplaza la función saveCat original
+window.saveCat = async function() {
+  const id    = document.getElementById('catId').value;
+  const name  = document.getElementById('catName').value.trim();
+  const slug  = document.getElementById('catSlug').value.trim().toLowerCase().replace(/\s+/g,'_');
+  const emoji = document.getElementById('catEmoji').value.trim();
+  const color = document.getElementById('catColor').value.trim();
+  const imageUrl = (document.getElementById('catImageUrl') || {}).value.trim() || null;
+  const mE   = document.getElementById('catMsg'); mE.textContent = '';
+
+  if (!name || !slug) { mE.textContent = 'Nombre y slug son requeridos'; return; }
+
+  const body = { name, slug, emoji: emoji || null, color: color || null, image_url: imageUrl };
+
+  try {
+    const res = id
+      ? await fetch(`${SB}/pn_categories?id=eq.${id}`, { method: 'PATCH', headers: H, body: JSON.stringify(body) })
+      : await fetch(`${SB}/pn_categories`,              { method: 'POST',  headers: H, body: JSON.stringify(body) });
+
+    if (res.ok) {
+      resetCatForm();
+      await loadCats();
+      await loadProdsDropdown();
+    } else {
+      // fallback local
+      if (id) { const i = cats.findIndex(c => c.id === id); if (i > -1) cats[i] = { ...cats[i], ...body }; }
+      else { cats.push({ id: slug, slug, ...body }); }
+      renderCatGrid(); updateProdCatSelect(); resetCatForm();
+    }
+  } catch (e) { mE.textContent = 'Error al guardar'; }
+};
+
+// ── OVERRIDE editCat para cargar image_url ────────────
+window.editCat = function(c) {
+  document.getElementById('catFormTitle').textContent = 'Editar Categoría';
+  document.getElementById('catId').value    = c.id;
+  document.getElementById('catName').value  = c.name;
+  document.getElementById('catSlug').value  = c.slug;
+  document.getElementById('catEmoji').value = c.emoji || '';
+  document.getElementById('catColor').value = c.color || '';
+  updatePreviewBox('catColor');
+  // Cargar image_url si existe
+  const imgInp = document.getElementById('catImageUrl');
+  if (imgInp) {
+    imgInp.value = c.image_url || '';
+    if (c.image_url) previewCatImg();
+  }
+};
+
+// ── OVERRIDE resetCatForm para limpiar image_url ──────
+const _origResetCatForm = window.resetCatForm;
+window.resetCatForm = function() {
+  _origResetCatForm();
+  const imgInp = document.getElementById('catImageUrl');
+  if (imgInp) imgInp.value = '';
+  const wrap = document.getElementById('catImgPreview');
+  if (wrap) wrap.style.display = 'none';
+};
+
+// ── OVERRIDE renderCatGrid para mostrar imagen ────────
+window.renderCatGrid = function() {
+  const g = document.getElementById('catGrid'); if (!g) return;
+  if (!cats.length) { g.innerHTML = '<div style="color:var(--mu);font-size:.85rem">No hay categorías.</div>'; return; }
+  g.innerHTML = cats.map(c => `
+    <div class="cat-card">
+      <div class="cat-card-name">
+        ${c.image_url
+          ? `<img src="${c.image_url}" class="cat-card-img" alt="${c.name}" onerror="this.style.display='none'">`
+          : `<span style="font-size:1.2rem">${c.emoji || '📦'}</span>`
+        }
+        <span style="color:${c.color || 'var(--tx)'}">${c.name}</span>
+        <span style="font-size:.68rem;color:var(--mu);font-weight:400">${c.slug}</span>
+      </div>
+      <div class="cat-card-actions">
+        <button class="btn btn-out btn-sm" onclick='editCat(${JSON.stringify(c).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn btn-sm" style="background:rgba(230,51,41,.15);color:#ff6b6b;border:none" onclick="deleteCat('${c.id}','${c.name}')">🗑</button>
+      </div>
+    </div>`).join('');
+};
+
+// ── INYECTAR EXTRAS ───────────────────────────────────
 function injectCatExtras() {
   injectPatchCSS();
   buildPalette('catColor');
-  buildImgField('catEmoji', 'cat');
+  buildCatImageField();
 }
 
 function injectRewardExtras() {
   injectPatchCSS();
   buildPalette('rewardColor');
-  buildImgField('rewardEmoji', 'reward');
+  buildRewardImageField();
 }
 
 (function() {
