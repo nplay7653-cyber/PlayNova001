@@ -247,12 +247,67 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);color:var(--mu);font-size:.78rem;letter-spacing:1px;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px;}
+
+/* ── HAMBURGER BTN ── */
+.ham-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background .2s;flex-shrink:0;}
+.ham-btn:hover{background:var(--b1);}
+.ham-btn span{display:block;width:100%;height:2px;background:var(--tx);border-radius:2px;transition:all .3s;}
+
+/* ── CLIENT SIDEBAR (Gmail style) ── */
+.client-sidebar-overlay{display:none;position:fixed;inset:0;z-index:299;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);}
+.client-sidebar-overlay.open{display:block;}
+.client-sidebar{position:fixed;top:0;left:-280px;width:260px;height:100%;z-index:300;background:var(--s2);border-right:1px solid var(--b2);display:flex;flex-direction:column;transition:left .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+.client-sidebar.open{left:0;}
+.csb-header{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:.85rem;}
+.csb-avatar{width:40px;height:40px;border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.csb-userinfo{flex:1;min-width:0;}
+.csb-username{font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.csb-pts{font-size:.78rem;color:var(--go);font-weight:700;}
+.csb-nav{padding:.65rem .5rem;flex:1;}
+.csb-item{display:flex;align-items:center;gap:.85rem;padding:.75rem 1rem;border-radius:50px;cursor:pointer;font-size:.9rem;font-weight:600;color:var(--mu);transition:all .18s;margin-bottom:.15rem;}
+.csb-item:hover{background:var(--b1);color:var(--tx);}
+.csb-item.on{background:rgba(230,51,41,.15);color:var(--ac);}
+.csb-item .csb-ico{font-size:1.15rem;width:24px;text-align:center;flex-shrink:0;}
+.csb-divider{height:1px;background:var(--b1);margin:.5rem 1rem;}
+.csb-footer{padding:1rem 1.25rem;border-top:1px solid var(--b1);}
+.csb-footer .csb-logout{display:flex;align-items:center;gap:.85rem;padding:.7rem 1rem;border-radius:50px;cursor:pointer;font-size:.88rem;font-weight:600;color:#ff6b6b;transition:background .18s;}
+.csb-footer .csb-logout:hover{background:rgba(230,51,41,.1);}
+
 @media(max-width:768px){
   .nav-links{display:none;}
   .pgrid{grid-template-columns:1fr;}
   .aside{width:200px;min-width:200px;}
   .modal{padding:1.5rem;}
+  /* hero mobile */
+  .hcta{gap:.65rem;}
+  .hcta .btn{padding:.6rem 1.25rem;font-size:.82rem;}
+  /* plan cards 1 col */
+  .sgrid{grid-template-columns:1fr!important;}
+  .cgrid{grid-template-columns:1fr!important;}
+  /* puntos grid */
+  .pgrid{gap:1.5rem;}
+  /* client topbar mobile */
+  .client-topbar{padding:.6rem 1rem;gap:.5rem;}
+  .client-nav{display:none;}/* hidden — use sidebar */
+  .ham-btn{display:flex;}
+  /* client body padding */
+  .client-body{padding:1rem .85rem;}
+  /* pts hero stack */
+  .pts-hero{flex-direction:column;gap:1rem;padding:1.25rem;}
+  .pts-big{font-size:3rem;}
+  /* reward grid 2 col */
+  .reward-grid{grid-template-columns:1fr 1fr;}
+  /* svc cards 1 col */
+  #cSvcGrid{grid-template-columns:1fr!important;}
+  /* svc tabs scroll */
+  .svc-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:.35rem;-webkit-overflow-scrolling:touch;}
+  .svc-tabs::-webkit-scrollbar{height:3px;}
+  /* topbar right info hide username text */
+  .ctb-welcome{display:none;}
+  /* pcard padding */
+  .pcard{padding:1.1rem;}
 }
+
 @media(max-width:600px){
   #adminDash{flex-direction:column;}
   .aside{width:100%;height:auto;min-width:unset;flex-direction:row;overflow-x:auto;}
@@ -260,6 +315,18 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .amenu-section{display:none;}
   .aside-foot{display:none;}
   .dash-main{height:auto;}
+  /* sale form stack */
+  .sale-form{flex-direction:column;}
+  .sale-form .fg{min-width:unset!important;flex:none!important;width:100%;}
+  /* stats grid 2 col */
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  /* modal full */
+  .modal{max-width:100%;margin:.5rem;border-radius:12px;}
+}
+
+@media(max-width:400px){
+  .reward-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -610,10 +677,41 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   </div>
 </div>
 
+<!-- CLIENT SIDEBAR OVERLAY -->
+<div class="client-sidebar-overlay" id="cSidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- CLIENT SIDEBAR (Gmail style) -->
+<div class="client-sidebar" id="cSidebar">
+  <div class="csb-header">
+    <div class="csb-avatar" id="csbAvatar">D</div>
+    <div class="csb-userinfo">
+      <div class="csb-username" id="csbUsername">Usuario</div>
+      <div class="csb-pts">★ <span id="csbPts">0</span> puntos</div>
+    </div>
+  </div>
+  <div class="csb-nav">
+    <div class="csb-item on" id="csb-puntos" onclick="setCTab('puntos');closeSidebar()"><span class="csb-ico">⭐</span>Mis Puntos</div>
+    <div class="csb-item" id="csb-servicios" onclick="setCTab('servicios');closeSidebar()"><span class="csb-ico">📺</span>Servicios</div>
+    <div class="csb-item" id="csb-combos" onclick="setCTab('combos');closeSidebar()"><span class="csb-ico">🔥</span>Combos</div>
+    <div class="csb-item" id="csb-historial" onclick="setCTab('historial');closeSidebar()"><span class="csb-ico">📋</span>Historial</div>
+    <div class="csb-divider"></div>
+    <div class="csb-item" style="color:var(--mu);font-size:.78rem;cursor:default;padding:.4rem 1rem">PLAY <span style="color:var(--ac)">NOVA</span></div>
+  </div>
+  <div class="csb-footer">
+    <div class="csb-logout" onclick="closeDash()">
+      <span class="csb-ico">🚪</span>Cerrar sesión
+    </div>
+  </div>
+</div>
+
 <!-- CLIENT DASHBOARD -->
 <div id="clientDash">
   <div class="client-topbar">
-    <div style="display:flex;align-items:center;gap:1rem">
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <!-- Hamburger (móvil) -->
+      <button class="ham-btn" onclick="openSidebar()" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
       <div class="logo" style="font-size:1.1rem">PLAY <span>NOVA</span></div>
       <div class="client-nav">
         <div class="cnav-item on" onclick="setCTab('puntos')">⭐ Mis Puntos</div>
@@ -622,10 +720,10 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
         <div class="cnav-item" onclick="setCTab('historial')">📋 Historial</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:.75rem">
-      <div style="font-size:.82rem;color:var(--mu)">Bienvenido, <strong id="clientUsername" style="color:var(--tx)"></strong></div>
-      <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--go)">★ <span id="clientPts">0</span></div>
-      <button class="btn btn-out btn-sm" onclick="closeDash()">Salir</button>
+    <div style="display:flex;align-items:center;gap:.65rem">
+      <span class="ctb-welcome" style="font-size:.8rem;color:var(--mu)">Bienvenido, <strong id="clientUsername" style="color:var(--tx)"></strong></span>
+      <div style="font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;color:var(--go);white-space:nowrap">★ <span id="clientPts">0</span></div>
+      <button class="btn btn-out btn-sm" onclick="closeDash()" style="white-space:nowrap">Salir</button>
     </div>
   </div>
   <div class="client-body">
@@ -692,6 +790,23 @@ function toggleEye(inputId,btn){
   const show=inp.type==='password';
   inp.type=show?'text':'password';
   btn.textContent=show?'🙈':'👁';
+}
+
+// ── SIDEBAR (Gmail-style) ──
+function openSidebar(){
+  document.getElementById('cSidebar').classList.add('open');
+  document.getElementById('cSidebarOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSidebar(){
+  document.getElementById('cSidebar').classList.remove('open');
+  document.getElementById('cSidebarOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function syncSidebar(tab){
+  document.querySelectorAll('.csb-item[id^="csb-"]').forEach(el=>el.classList.remove('on'));
+  const el=document.getElementById('csb-'+tab);
+  if(el)el.classList.add('on');
 }
 
 const REWARDS=[
@@ -1123,6 +1238,12 @@ function openClient(){
   document.getElementById('cPtsBig').textContent=me.points||0;
   document.getElementById('cRefCode').textContent=me.referral_code||'—';
   document.getElementById('canjearLink').href=`https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(me.username)}%20y%20quiero%20canjear%20mis%20puntos%20(tengo%20${me.points||0}%20pts)`;
+  // Sidebar user info
+  const initials=(me.username||'?').charAt(0).toUpperCase();
+  document.getElementById('csbAvatar').textContent=initials;
+  document.getElementById('csbUsername').textContent=me.username;
+  document.getElementById('csbPts').textContent=me.points||0;
+  syncSidebar('puntos');
   renderRewards();
   loadClientSvcs();
   loadCHist();
@@ -1131,7 +1252,9 @@ function setCTab(tab){
   document.querySelectorAll('.client-panel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.cnav-item').forEach(i=>i.classList.remove('on'));
   document.getElementById('cp-'+tab).classList.add('on');
-  document.querySelector(`.cnav-item[onclick*="'${tab}'"]`).classList.add('on');
+  const navEl=document.querySelector(`.cnav-item[onclick*="'${tab}'"]`);
+  if(navEl)navEl.classList.add('on');
+  syncSidebar(tab);
   if(tab==='servicios'&&clientProds.length)renderClientSvc(curCSvc);
 }
 function renderRewards(){
@@ -1157,6 +1280,7 @@ function copyCode(){
 function closeDash(){
   document.getElementById('adminDash').classList.remove('open');
   document.getElementById('clientDash').classList.remove('open');
+  closeSidebar();
   me=null;clearS();
 }
 </script>
