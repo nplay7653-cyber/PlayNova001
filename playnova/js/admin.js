@@ -504,3 +504,152 @@ async function checkFirstPurchase() {
     badge.style.color = 'var(--sp)';
   }
 }
+
+
+// ══════════════════════════════════════════════════════
+// PATCH: Paleta de colores + Preview de imagen por URL
+// Pega este bloque al FINAL de tu admin.js
+// ══════════════════════════════════════════════════════
+
+const BRAND_COLORS = [
+  { hex: '#e50914', label: 'Netflix' },
+  { hex: '#8B00FF', label: 'HBO' },
+  { hex: '#0099e5', label: 'Disney+' },
+  { hex: '#1DB954', label: 'Spotify' },
+  { hex: '#74aa9c', label: 'ChatGPT' },
+  { hex: '#7D2AE8', label: 'Canva' },
+  { hex: '#0099d8', label: 'DirecTV' },
+  { hex: '#f47521', label: 'Crunch' },
+  { hex: '#f5a623', label: 'Combo' },
+];
+const EXTRA_COLORS = [
+  '#e63329','#ff6b6b','#ff4500','#ff8c00',
+  '#ffd700','#adff2f','#00fa9a','#00ced1',
+  '#1e90ff','#7b68ee','#da70d6','#ff69b4',
+  '#ffffff','#cccccc','#888888','#333333',
+];
+
+function injectPatchCSS() {
+  if (document.getElementById('cp-patch-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'cp-patch-styles';
+  s.textContent = `
+    .cp-wrap{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:.6rem .75rem;margin-top:.35rem;}
+    .cp-section-label{font-size:.6rem;text-transform:uppercase;letter-spacing:1px;color:var(--mu);font-weight:700;margin-bottom:.35rem;}
+    .cp-row{display:flex;flex-wrap:wrap;gap:.35rem;}
+    .cp-swatch{width:54px;height:28px;border-radius:5px;cursor:pointer;position:relative;flex-shrink:0;transition:transform .12s;}
+    .cp-swatch:hover{transform:scale(1.1);outline:2px solid rgba(255,255,255,.5);}
+    .cp-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.48rem;font-weight:700;color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none;text-align:center;padding:0 2px;}
+    .cp-swatch.sm{width:22px;height:22px;}
+    .cp-preview-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;}
+    .cp-preview-box{width:24px;height:24px;border-radius:4px;border:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+    .cp-hex-text{font-size:.72rem;color:var(--mu);}
+    .img-url-row{display:flex;gap:.45rem;align-items:center;margin-top:.35rem;}
+    .img-url-row .fi{flex:1;font-size:.8rem;}
+    .img-preview-wrap{margin-top:.45rem;display:none;align-items:center;gap:.65rem;background:var(--s2);border:1px solid var(--b1);border-radius:7px;padding:.5rem .75rem;}
+    .img-preview-wrap img{width:40px;height:40px;object-fit:contain;border-radius:5px;background:rgba(255,255,255,.06);}
+    .img-preview-wrap .img-hint{font-size:.72rem;color:var(--mu);line-height:1.5;}
+    .img-err{font-size:.72rem;color:#ff6b6b;margin-top:.3rem;}
+  `;
+  document.head.appendChild(s);
+}
+
+function buildPalette(targetId) {
+  if (document.getElementById('palette_' + targetId)) return;
+  const brands = BRAND_COLORS.map(c =>
+    `<div class="cp-swatch" title="${c.label}" style="background:${c.hex}" onclick="pickColor('${c.hex}','${targetId}')"><span class="cp-label">${c.label}</span></div>`
+  ).join('');
+  const extras = EXTRA_COLORS.map(c =>
+    `<div class="cp-swatch sm" title="${c}" style="background:${c};${c==='#ffffff'?'border:1px solid #666':''}" onclick="pickColor('${c}','${targetId}')"></div>`
+  ).join('');
+  const html = `<div class="cp-wrap" id="palette_${targetId}">
+    <div class="cp-section-label">Marcas</div>
+    <div class="cp-row">${brands}</div>
+    <div class="cp-section-label" style="margin-top:.5rem">Más colores</div>
+    <div class="cp-row">${extras}</div>
+    <div class="cp-preview-row">
+      <div class="cp-preview-box" id="cpbox_${targetId}"></div>
+      <span class="cp-hex-text">Clic en un color · o escribe el hex arriba</span>
+    </div>
+  </div>`;
+  const inp = document.getElementById(targetId);
+  if (!inp) return;
+  inp.insertAdjacentHTML('afterend', html);
+  inp.addEventListener('input', () => updatePreviewBox(targetId));
+}
+
+function pickColor(hex, targetId) {
+  const inp = document.getElementById(targetId);
+  if (inp) { inp.value = hex; inp.dispatchEvent(new Event('input')); }
+  updatePreviewBox(targetId);
+  if (targetId === 'rewardColor') liveRewardPreview();
+}
+
+function updatePreviewBox(targetId) {
+  const val = (document.getElementById(targetId) || {}).value || '';
+  const box = document.getElementById('cpbox_' + targetId);
+  if (box && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(val)) box.style.background = val;
+}
+
+function buildImgField(emojiInputId, uid) {
+  if (document.getElementById('imgf_' + uid)) return;
+  const html = `<div id="imgf_${uid}" style="margin-top:.45rem">
+    <div class="cp-section-label">Vista previa de imagen (pega URL)</div>
+    <div class="img-url-row">
+      <input class="fi" id="imgurl_${uid}" placeholder="https://logo.clearbit.com/netflix.com" oninput="previewImg('${uid}')">
+    </div>
+    <div class="img-preview-wrap" id="imgprev_${uid}">
+      <img id="imgthumb_${uid}" src="" alt="preview" onerror="imgError('${uid}')">
+      <div class="img-hint">Imagen cargada · escribe el emoji arriba 👆</div>
+    </div>
+    <div class="img-err" id="imgerr_${uid}"></div>
+  </div>`;
+  const inp = document.getElementById(emojiInputId);
+  if (!inp) return;
+  const parent = inp.closest('.fg');
+  if (parent) parent.insertAdjacentHTML('afterend', html);
+}
+
+function previewImg(uid) {
+  const url = (document.getElementById('imgurl_' + uid) || {}).value || '';
+  const wrap = document.getElementById('imgprev_' + uid);
+  const thumb = document.getElementById('imgthumb_' + uid);
+  const err = document.getElementById('imgerr_' + uid);
+  if (err) err.textContent = '';
+  if (!url) { if (wrap) wrap.style.display = 'none'; return; }
+  thumb.src = url;
+  wrap.style.display = 'flex';
+}
+
+function imgError(uid) {
+  const wrap = document.getElementById('imgprev_' + uid);
+  const err = document.getElementById('imgerr_' + uid);
+  if (wrap) wrap.style.display = 'none';
+  if (err) err.textContent = 'No se pudo cargar la imagen. Verifica la URL.';
+}
+
+function injectCatExtras() {
+  injectPatchCSS();
+  buildPalette('catColor');
+  buildImgField('catEmoji', 'cat');
+}
+
+function injectRewardExtras() {
+  injectPatchCSS();
+  buildPalette('rewardColor');
+  buildImgField('rewardEmoji', 'reward');
+}
+
+(function() {
+  const _tab = window.setAdminTab;
+  window.setAdminTab = function(tab) {
+    _tab(tab);
+    if (tab === 'categorias') setTimeout(injectCatExtras, 60);
+    if (tab === 'canjes')     setTimeout(injectRewardExtras, 60);
+  };
+  const _show = window.showRewardForm;
+  window.showRewardForm = function() {
+    _show();
+    setTimeout(injectRewardExtras, 60);
+  };
+})();
