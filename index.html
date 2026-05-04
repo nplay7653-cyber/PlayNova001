@@ -174,7 +174,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* ── ADMIN DASHBOARD ── */
 #adminDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);}
-#adminDash.open{display:block;}
+#adminDash.open{display:flex;flex-direction:column;}
 .aside{display:none;position:fixed;top:0;left:0;width:220px;background:var(--s2);border-right:1px solid var(--b1);flex-direction:column;height:100vh;overflow-y:auto;z-index:400;}
 .aside.visible{display:flex;}
 .aside-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--b1);}
@@ -190,7 +190,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .aside-foot{padding:1rem 1.25rem;border-top:1px solid var(--b1);}
 .aside-foot .uinfo{font-size:.78rem;color:var(--mu);margin-bottom:.6rem;}
 .aside-foot .uinfo strong{color:var(--tx);display:block;}
-.dash-main{overflow-y:auto;height:100vh;margin-left:220px;}
+.dash-main{flex:1;overflow-y:auto;height:100vh;margin-left:220px;}
 .dash-topbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:.85rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
 .dash-topbar-title{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;}
 .dash-content{padding:1.75rem;max-width:1100px;}
@@ -293,19 +293,19 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
   .pcard{padding:1.1rem;}
 
   /* ── ADMIN MOBILE ── */
-  #adminDash{display:block;position:fixed;inset:0;overflow:hidden;}
+  #adminDash.open{display:flex;flex-direction:column;}
   .aside{
     left:-270px !important;
     width:260px !important;
     transition:left .28s cubic-bezier(.4,0,.2,1) !important;
   }
   .aside.open{left:0 !important;}
-  .dash-main{margin-left:0 !important;width:100%;height:100vh;display:flex;flex-direction:column;}
+  .dash-main{margin-left:0 !important;width:100%;flex:1;display:flex;flex-direction:column;min-height:0;}
   .admin-ham{display:flex;}
   .dash-topbar{padding:.75rem 1rem;gap:.65rem;flex-shrink:0;}
   .dash-topbar-title{font-size:1rem;}
   #dashDate{display:none;}
-  .dash-content{padding:1rem .85rem;flex:1;overflow-y:auto;height:0;}
+  .dash-content{padding:1rem .85rem;flex:1;overflow-y:auto;}
   .stats-grid{grid-template-columns:1fr 1fr;gap:.65rem;}
   .sval{font-size:1.5rem;}
   .sale-form{flex-direction:column;gap:.65rem;}
