@@ -327,8 +327,33 @@ window.addEventListener('DOMContentLoaded', () => {
     if (saved.isAdmin) { window.location.href = 'admin.html'; return; }
     window.location.href = 'client.html';
   }
-  // Cargar rewards dinámicos
+
   loadIndexRewards();
+  loadCatLogos();
+
+
+async function loadCatLogos() {
+  try {
+    const r = await fetch(`${SB}/pn_categories?select=slug,name,image_url,emoji,color&order=name`, { headers: HG });
+    if (!r.ok) return;
+    const cats = await r.json();
+    cats.forEach(cat => {
+      if (!cat.image_url) return;
+      const tab = document.querySelector(`.stab[data-s="${cat.slug}"]`);
+      if (!tab) return;
+      // Reemplaza el texto con imagen + nombre
+      tab.innerHTML = `<img src="${cat.image_url}" alt="${cat.name}"
+        style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px;display:inline-block"
+        onerror="this.style.display='none'">${cat.name}`;
+    });
+  } catch (e) {
+    // Si falla, las tabs quedan con texto normal — no pasa nada
+  }
+}
+
+// Llamar al cargar la página (después de loadIndexRewards)
+// Modifica el DOMContentLoaded existente para agregar esta llamada:
+// loadCatLogos();   ← agregar esta línea dentro del DOMContentLoaded
 });
 </script>
 </body>
