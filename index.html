@@ -162,6 +162,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .fopt{font-size:.7rem;color:var(--mu);margin-top:1.25rem;padding-top:.9rem;border-top:1px solid var(--b1);}
 .ferr{font-size:.72rem;color:#ff6b6b;margin-top:.45rem;}
 .fok{font-size:.72rem;color:var(--sp);margin-top:.45rem;}
+.pass-wrap{position:relative;}
+.pass-wrap .fi{padding-right:2.5rem;}
+.eye-btn{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--mu);font-size:1rem;line-height:1;padding:0;transition:color .2s;}
+.eye-btn:hover{color:var(--tx);}
+/* categories admin panel */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;margin-top:1rem;}
+.cat-card{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:1rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.cat-card-name{font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:.5rem;}
+.cat-card-actions{display:flex;gap:.4rem;flex-shrink:0;}
 
 /* ── ADMIN DASHBOARD ── */
 #adminDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);}
@@ -432,13 +441,29 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
     </div>
     <div id="fLogin">
       <div class="fg"><label class="fl">Usuario</label><input class="fi" id="lUser" placeholder="tu_usuario"></div>
-      <div class="fg"><label class="fl">Contraseña</label><input class="fi" type="password" id="lPass" placeholder="••••••••"></div>
+      <div class="fg"><label class="fl">Contraseña</label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="lPass" placeholder="••••••••">
+          <button type="button" class="eye-btn" onclick="toggleEye('lPass',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
       <div id="lErr" class="ferr"></div>
       <button class="btn btn-red" style="width:100%;padding:.7rem;margin-top:.5rem" onclick="doLogin()">Ingresar</button>
     </div>
     <div id="fReg" style="display:none">
       <div class="fg"><label class="fl">Usuario <span style="color:var(--ac)">*</span></label><input class="fi" id="rUser" placeholder="solo letras, números y _"></div>
-      <div class="fg"><label class="fl">Contraseña <span style="color:var(--ac)">*</span></label><input class="fi" type="password" id="rPass" placeholder="Mínimo 8 caracteres"></div>
+      <div class="fg"><label class="fl">Contraseña <span style="color:var(--ac)">*</span></label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="rPass" placeholder="Mínimo 8 caracteres">
+          <button type="button" class="eye-btn" onclick="toggleEye('rPass',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl">Confirmar Contraseña <span style="color:var(--ac)">*</span></label>
+        <div class="pass-wrap">
+          <input class="fi" type="password" id="rPass2" placeholder="Repite tu contraseña">
+          <button type="button" class="eye-btn" onclick="toggleEye('rPass2',this)" tabindex="-1">👁</button>
+        </div>
+      </div>
       <div class="fg"><label class="fl">Teléfono <span style="color:var(--mu);font-size:.65rem">(opcional)</span></label><input class="fi" id="rPhone" placeholder="+51 9XX XXX XXX"></div>
       <div class="fg"><label class="fl">Código referido <span style="color:var(--mu);font-size:.65rem">(opcional)</span></label><input class="fi" id="rRef" placeholder="De quien te invitó" style="text-transform:uppercase"></div>
       <div class="fopt">✨ Registro opcional — sirve para acumular y canjear puntos gratis.</div>
@@ -461,6 +486,7 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
       <div class="amenu-section">Catálogo</div>
       <div class="amitem" onclick="setAdminTab('productos')"><span class="ico">📦</span>Productos</div>
       <div class="amitem" onclick="setAdminTab('addprod')"><span class="ico">➕</span>Agregar Producto</div>
+      <div class="amitem" onclick="setAdminTab('categorias')"><span class="ico">🏷️</span>Categorías</div>
       <div class="amenu-section">Clientes</div>
       <div class="amitem" onclick="setAdminTab('clientes')"><span class="ico">👥</span>Ver Clientes</div>
     </div>
@@ -558,6 +584,28 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
         <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Usuario</th><th>Teléfono</th><th>Puntos</th><th>Referido</th><th>Código</th><th>Registrado</th></tr></thead><tbody id="clientsBody"><tr><td colspan="6" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
       </div>
 
+      <!-- CATEGORÍAS -->
+      <div class="apanel" id="ap-categorias">
+        <div class="section-hd">Gestión de Categorías</div>
+        <div style="background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:1.25rem;max-width:520px;margin-bottom:1.5rem">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.9rem" id="catFormTitle">Nueva Categoría</div>
+          <input type="hidden" id="catId">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+            <div class="fg" style="margin:0"><label class="fl">Nombre</label><input class="fi" id="catName" placeholder="ej: Grok, Prime Video"></div>
+            <div class="fg" style="margin:0"><label class="fl">Slug (clave)</label><input class="fi" id="catSlug" placeholder="ej: grok" style="text-transform:lowercase"></div>
+            <div class="fg" style="margin:0"><label class="fl">Emoji / Ícono</label><input class="fi" id="catEmoji" placeholder="ej: 🤖" maxlength="4"></div>
+            <div class="fg" style="margin:0"><label class="fl">Color hex</label><input class="fi" id="catColor" placeholder="#e63329" maxlength="9"></div>
+          </div>
+          <div id="catMsg" class="ferr" style="margin-bottom:.5rem"></div>
+          <div style="display:flex;gap:.65rem">
+            <button class="btn btn-red" onclick="saveCat()">Guardar</button>
+            <button class="btn btn-out" onclick="resetCatForm()">Cancelar</button>
+          </div>
+        </div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.65rem">Categorías activas</div>
+        <div class="cat-grid" id="catGrid"><div style="color:var(--mu);font-size:.85rem">Cargando...</div></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -605,16 +653,7 @@ footer{text-align:center;padding:2.5rem 2rem;border-top:1px solid var(--b1);colo
     <div class="client-panel" id="cp-servicios">
       <div style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:.4rem">Servicios <span style="color:var(--ac)">Disponibles</span></div>
       <p style="color:var(--mu);font-size:.85rem;margin-bottom:1.5rem">Compra y acumula puntos · Botón directo a WhatsApp</p>
-      <div class="svc-tabs" id="cSvcTabs">
-        <div class="stab on" data-cs="netflix" onclick="setCTab('servicios');setCSvc('netflix')">Netflix</div>
-        <div class="stab" data-cs="hbo" onclick="setCTab('servicios');setCSvc('hbo')">HBO Max</div>
-        <div class="stab" data-cs="disney" onclick="setCTab('servicios');setCSvc('disney')">Disney+</div>
-        <div class="stab" data-cs="chatgpt" onclick="setCTab('servicios');setCSvc('chatgpt')">ChatGPT</div>
-        <div class="stab" data-cs="canva" onclick="setCTab('servicios');setCSvc('canva')">Canva</div>
-        <div class="stab" data-cs="spotify" onclick="setCTab('servicios');setCSvc('spotify')">Spotify</div>
-        <div class="stab" data-cs="directv" onclick="setCTab('servicios');setCSvc('directv')">DirecTV</div>
-        <div class="stab" data-cs="crunchyroll" onclick="setCTab('servicios');setCSvc('crunchyroll')">Crunchyroll</div>
-      </div>
+      <div class="svc-tabs" id="cSvcTabs"></div>
       <div id="cSvcGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem"></div>
     </div>
 
@@ -645,7 +684,15 @@ const SB='https://kyqzsnugnvnucxfymrwu.supabase.co/rest/v1';
 const KEY='sb_publishable_04dv96Cr06MtNRxSObmpHQ_HwZkIdYZ';
 const WA='51924606154';
 const H={'Content-Type':'application/json',apikey:KEY,Authorization:'Bearer '+KEY,Prefer:'return=representation'};
-let me=null, prods=[], curCSvc='netflix';
+let me=null, prods=[], curCSvc='netflix', clientProds=[], cats=[];
+
+// ── EYE TOGGLE ──
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.textContent=show?'🙈':'👁';
+}
 
 const REWARDS=[
   {name:'Crunchyroll Perfil',pts:50,color:'var(--cr)'},
@@ -704,6 +751,7 @@ function loadS(){try{const s=localStorage.getItem('pn_s');return s?JSON.parse(s)
 function clearS(){try{localStorage.removeItem('pn_s');}catch(e){}}
 
 window.addEventListener('DOMContentLoaded',async()=>{
+  await loadCats();
   const saved=loadS();
   if(saved){
     if(saved.isAdmin){openAdmin();return;}
@@ -743,12 +791,14 @@ function swTab(tab){
 async function doRegister(){
   const user=document.getElementById('rUser').value.trim();
   const pass=document.getElementById('rPass').value;
+  const pass2=document.getElementById('rPass2').value;
   const phone=document.getElementById('rPhone').value.trim();
   const ref=document.getElementById('rRef').value.trim().toUpperCase();
   const eE=document.getElementById('rErr'),oE=document.getElementById('rOk');
   eE.textContent='';oE.textContent='';
   if(!user||user.length<3){eE.textContent='Mínimo 3 caracteres en el usuario';return;}
   if(pass.length<8){eE.textContent='Contraseña mínimo 8 caracteres';return;}
+  if(pass!==pass2){eE.textContent='Las contraseñas no coinciden';return;}
   if(!/^[a-zA-Z0-9_]+$/.test(user)){eE.textContent='Solo letras, números y _';return;}
   const chk=await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=id`,{headers:H});
   if((await chk.json()).length>0){eE.textContent='Ese usuario ya está en uso';return;}
@@ -783,19 +833,20 @@ async function doLogin(){
 function openAdmin(){
   document.getElementById('adminDash').classList.add('open');
   document.getElementById('dashDate').textContent=new Date().toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  loadStats();loadProductsTable();loadProdsDropdown();
+  loadStats();loadProductsTable();loadProdsDropdown();loadCats();
 }
 function setAdminTab(tab){
   document.querySelectorAll('.apanel').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.amitem').forEach(i=>i.classList.remove('on'));
   document.getElementById('ap-'+tab).classList.add('on');
   document.querySelector(`.amitem[onclick*="'${tab}'"]`).classList.add('on');
-  const titles={resumen:'Resumen',venta:'Registrar Venta',historial:'Historial de Ventas',productos:'Catálogo de Productos',addprod:'Agregar Producto',clientes:'Clientes'};
+  const titles={resumen:'Resumen',venta:'Registrar Venta',historial:'Historial de Ventas',productos:'Catálogo de Productos',addprod:'Agregar Producto',clientes:'Clientes',categorias:'Gestión de Categorías'};
   document.getElementById('adminTabTitle').textContent=titles[tab]||tab;
   if(tab==='historial')loadHistory();
   if(tab==='productos')loadProductsTable();
   if(tab==='clientes')loadClients();
   if(tab==='resumen')loadStats();
+  if(tab==='categorias')loadCats();
 }
 
 async function loadStats(){
@@ -839,15 +890,17 @@ async function loadProdsDropdown(){
   prods=await r.json();
   const sel=document.getElementById('apProduct');
   if(!sel)return;
-  const cats={};prods.forEach(p=>{if(!cats[p.category])cats[p.category]=[];cats[p.category].push(p);});
-  const lbl={netflix:'Netflix',hbo:'HBO Max',disney:'Disney+',chatgpt:'ChatGPT',canva:'Canva',spotify:'Spotify',directv:'DirecTV',crunchyroll:'Crunchyroll',combo:'Combos'};
+  const groups={};prods.forEach(p=>{if(!groups[p.category])groups[p.category]=[];groups[p.category].push(p);});
   sel.innerHTML='<option value="">— Selecciona servicio —</option>';
-  Object.keys(lbl).forEach(cat=>{
-    if(!cats[cat])return;
-    const og=document.createElement('optgroup');og.label=lbl[cat];
-    cats[cat].forEach(p=>{const op=document.createElement('option');op.value=p.id;op.textContent=`${p.name} — S/ ${Number(p.sale_price).toFixed(2)}`;og.appendChild(op);});
+  Object.keys(groups).forEach(cat=>{
+    const og=document.createElement('optgroup');
+    const catObj=cats.find(c=>c.slug===cat);
+    og.label=catObj?catObj.name:(cat.charAt(0).toUpperCase()+cat.slice(1));
+    groups[cat].forEach(p=>{const op=document.createElement('option');op.value=p.id;op.textContent=`${p.name} — S/ ${Number(p.sale_price).toFixed(2)}`;og.appendChild(op);});
     sel.appendChild(og);
   });
+  // also update the product form category dropdown
+  updateProdCatSelect();
 }
 function fillProduct(){
   const p=prods.find(x=>x.id===document.getElementById('apProduct').value);
@@ -855,6 +908,123 @@ function fillProduct(){
   document.getElementById('apSale').value=Number(p.sale_price).toFixed(2);
   document.getElementById('apCost').value=Number(p.cost_price).toFixed(2);
   document.getElementById('apProfit').value='S/ '+(p.sale_price-p.cost_price).toFixed(2);
+}
+
+function updateProdCatSelect(){
+  const sel=document.getElementById('prodCat');if(!sel)return;
+  const cur=sel.value;
+  // build from cats array + fallback defaults
+  const defaults=[{slug:'netflix',name:'Netflix'},{slug:'hbo',name:'HBO Max'},{slug:'disney',name:'Disney+'},{slug:'chatgpt',name:'ChatGPT'},{slug:'canva',name:'Canva'},{slug:'spotify',name:'Spotify'},{slug:'directv',name:'DirecTV'},{slug:'crunchyroll',name:'Crunchyroll'},{slug:'combo',name:'Combo'}];
+  const allCats=cats.length?cats:defaults;
+  sel.innerHTML=allCats.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+  if(cur)sel.value=cur;
+}
+
+// ── CATEGORIES ──
+async function loadCats(){
+  try{
+    const r=await fetch(`${SB}/pn_categories?select=*&order=name`,{headers:H});
+    if(r.ok){cats=await r.json();}
+    else{
+      // table might not exist yet — use static defaults
+      cats=[{id:'netflix',slug:'netflix',name:'Netflix',emoji:'🔴',color:'#e50914'},{id:'hbo',slug:'hbo',name:'HBO Max',emoji:'🟣',color:'#8B00FF'},{id:'disney',slug:'disney',name:'Disney+',emoji:'🔵',color:'#0099e5'},{id:'chatgpt',slug:'chatgpt',name:'ChatGPT',emoji:'🤖',color:'#74aa9c'},{id:'canva',slug:'canva',name:'Canva',emoji:'🎨',color:'#7D2AE8'},{id:'spotify',slug:'spotify',name:'Spotify',emoji:'🎵',color:'#1DB954'},{id:'directv',slug:'directv',name:'DirecTV',emoji:'📡',color:'#0099d8'},{id:'crunchyroll',slug:'crunchyroll',name:'Crunchyroll',emoji:'🍊',color:'#f47521'},{id:'combo',slug:'combo',name:'Combo',emoji:'🔥',color:'#f5a623'}];
+    }
+  }catch(e){cats=[];}
+  renderCatGrid();
+  updateProdCatSelect();
+}
+function renderCatGrid(){
+  const g=document.getElementById('catGrid');if(!g)return;
+  if(!cats.length){g.innerHTML='<div style="color:var(--mu);font-size:.85rem">No hay categorías. Crea la primera.</div>';return;}
+  g.innerHTML=cats.map(c=>`
+    <div class="cat-card">
+      <div class="cat-card-name"><span style="font-size:1.2rem">${c.emoji||'📦'}</span><span style="color:${c.color||'var(--tx)'}">${c.name}</span><span style="font-size:.68rem;color:var(--mu);font-weight:400">${c.slug}</span></div>
+      <div class="cat-card-actions">
+        <button class="btn btn-out btn-sm" onclick='editCat(${JSON.stringify(c).replace(/'/g,"&#39;")})'>✏️</button>
+        <button class="btn btn-sm" style="background:rgba(230,51,41,.15);color:#ff6b6b;border:none" onclick="deleteCat('${c.id}','${c.name}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+function editCat(c){
+  document.getElementById('catFormTitle').textContent='Editar Categoría';
+  document.getElementById('catId').value=c.id;
+  document.getElementById('catName').value=c.name;
+  document.getElementById('catSlug').value=c.slug;
+  document.getElementById('catEmoji').value=c.emoji||'';
+  document.getElementById('catColor').value=c.color||'';
+}
+function resetCatForm(){
+  document.getElementById('catFormTitle').textContent='Nueva Categoría';
+  document.getElementById('catId').value='';
+  ['catName','catSlug','catEmoji','catColor'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('catMsg').textContent='';
+}
+async function saveCat(){
+  const id=document.getElementById('catId').value;
+  const name=document.getElementById('catName').value.trim();
+  const slug=document.getElementById('catSlug').value.trim().toLowerCase().replace(/\s+/g,'_');
+  const emoji=document.getElementById('catEmoji').value.trim();
+  const color=document.getElementById('catColor').value.trim();
+  const mE=document.getElementById('catMsg');mE.textContent='';
+  if(!name||!slug){mE.textContent='Nombre y slug son requeridos';return;}
+  const body={name,slug,emoji:emoji||null,color:color||null};
+  try{
+    const res=id?await fetch(`${SB}/pn_categories?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(body)}):await fetch(`${SB}/pn_categories`,{method:'POST',headers:H,body:JSON.stringify(body)});
+    if(res.ok){resetCatForm();await loadCats();await loadProdsDropdown();}
+    else{
+      // If table doesn't exist, manage locally
+      if(id){const i=cats.findIndex(c=>c.id===id);if(i>-1)cats[i]={...cats[i],...body};}
+      else{cats.push({id:slug,slug,...body});}
+      renderCatGrid();updateProdCatSelect();resetCatForm();
+    }
+  }catch(e){mE.textContent='Error al guardar';}}
+async function deleteCat(id,name){
+  if(!confirm(`¿Eliminar categoría "${name}"? Los productos con esta categoría seguirán existiendo.`))return;
+  try{
+    const res=await fetch(`${SB}/pn_categories?id=eq.${id}`,{method:'DELETE',headers:H});
+    if(res.ok||res.status===204){cats=cats.filter(c=>c.id!==id);renderCatGrid();updateProdCatSelect();}
+    else{cats=cats.filter(c=>c.id!==id);renderCatGrid();updateProdCatSelect();}
+  }catch(e){cats=cats.filter(c=>c.id!==id);renderCatGrid();updateProdCatSelect();}}
+
+// ── CLIENT SERVICES FROM DB ──
+async function loadClientSvcs(){
+  const r=await fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`,{headers:H});
+  if(!r.ok)return;
+  clientProds=await r.json();
+  // group by category
+  const groups={};
+  clientProds.forEach(p=>{if(!groups[p.category])groups[p.category]=[];groups[p.category].push(p);});
+  const tabsEl=document.getElementById('cSvcTabs');if(!tabsEl)return;
+  tabsEl.innerHTML='';
+  const catKeys=Object.keys(groups);
+  catKeys.forEach((cat,i)=>{
+    const catObj=cats.find(c=>c.slug===cat);
+    const label=catObj?`${catObj.emoji||''}${catObj.name}`:(cat.charAt(0).toUpperCase()+cat.slice(1));
+    const tab=document.createElement('div');
+    tab.className='stab'+(i===0?' on':'');
+    tab.setAttribute('data-cs',cat);
+    tab.textContent=label;
+    tab.onclick=()=>{setCTab('servicios');renderClientSvc(cat);};
+    tabsEl.appendChild(tab);
+  });
+  if(catKeys.length)renderClientSvc(catKeys[0]);
+}
+function renderClientSvc(cat){
+  document.querySelectorAll('#cSvcTabs .stab').forEach(t=>{t.classList.toggle('on',t.getAttribute('data-cs')===cat);});
+  curCSvc=cat;
+  const catProds=clientProds.filter(p=>p.category===cat);
+  const catObj=cats.find(c=>c.slug===cat);
+  const color=catObj?(catObj.color||'var(--ac)'):'var(--ac)';
+  const grid=document.getElementById('cSvcGrid');
+  grid.innerHTML=catProds.map(c=>`
+    <div class="pcard" data-s="${cat}" style="--cat-color:${color}">
+      <span class="pbadge" style="background:${color}22;color:${color}">${catObj?(catObj.emoji||'')+''+catObj.name:cat}</span>
+      <div class="pname">${c.name}</div>
+      <div class="pdesc">${c.description||''}</div>
+      <div class="pprice"><span class="cy">S/</span><span class="am">${Number(c.sale_price).toFixed(2)}</span><span class="pe">/mes</span></div>
+      <div class="ppts">Gana ${Math.round(c.sale_price)} puntos</div>
+      <a href="https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(me?me.username:'cliente')}%2C%20quiero%20${encodeURIComponent(c.name)}%20S%2F${Number(c.sale_price).toFixed(2)}" target="_blank" class="pbuy">Comprar por WhatsApp</a>
+    </div>`).join('')||'<div style="color:var(--mu);font-size:.85rem;padding:1rem">Sin productos en esta categoría.</div>';
 }
 async function loadProductsTable(){
   const r=await fetch(`${SB}/pn_products?select=*&order=category,name`,{headers:H});
@@ -954,7 +1124,7 @@ function openClient(){
   document.getElementById('cRefCode').textContent=me.referral_code||'—';
   document.getElementById('canjearLink').href=`https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(me.username)}%20y%20quiero%20canjear%20mis%20puntos%20(tengo%20${me.points||0}%20pts)`;
   renderRewards();
-  renderCSvc('netflix');
+  loadClientSvcs();
   loadCHist();
 }
 function setCTab(tab){
@@ -962,6 +1132,7 @@ function setCTab(tab){
   document.querySelectorAll('.cnav-item').forEach(i=>i.classList.remove('on'));
   document.getElementById('cp-'+tab).classList.add('on');
   document.querySelector(`.cnav-item[onclick*="'${tab}'"]`).classList.add('on');
+  if(tab==='servicios'&&clientProds.length)renderClientSvc(curCSvc);
 }
 function renderRewards(){
   const pts=me.points||0;
@@ -969,23 +1140,6 @@ function renderRewards(){
     const ok=pts>=r.pts,diff=r.pts-pts;
     return `<div class="rcard${ok?' can':''}"><div class="rcard-name" style="color:${r.color}">${r.name}</div><div class="rcard-pts">${r.pts} <small>pts</small></div><div class="rcard-status ${ok?'ok':'no'}">${ok?'✓ ¡Puedes canjear!':'Faltan '+diff+' pts'}</div></div>`;
   }).join('');
-}
-function setCSvc(svc){
-  curCSvc=svc;
-  document.querySelectorAll('#cSvcTabs .stab').forEach(t=>t.classList.remove('on'));
-  document.querySelector(`#cSvcTabs .stab[data-cs="${svc}"]`).classList.add('on');
-  renderCSvc(svc);
-}
-function renderCSvc(svc){
-  const d=SVC_DATA[svc];if(!d)return;
-  document.getElementById('cSvcGrid').innerHTML=d.cards.map(c=>`
-    <div class="pcard" data-s="${svc}">
-      <span class="pbadge" style="background:${d.badge};color:${d.color}">${svc.charAt(0).toUpperCase()+svc.slice(1)}</span>
-      <div class="pname">${c.n}</div><div class="pdesc">${c.d}</div>
-      <div class="pprice"><span class="cy">S/</span><span class="am">${c.p}</span><span class="pe">${c.q}</span></div>
-      <div class="ppts">Gana ${c.p} puntos</div>
-      <a href="https://wa.me/${WA}?text=Hola%2C%20soy%20${encodeURIComponent(me?me.username:'cliente')}%2C%20quiero%20${c.wa}" target="_blank" class="pbuy">Comprar por WhatsApp</a>
-    </div>`).join('');
 }
 async function loadCHist(){
   const r=await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(me.username)}&select=*&order=created_at.desc`,{headers:H});
