@@ -70,7 +70,7 @@
     <div class="apanel" id="ap-venta">
       <div class="section-hd">Registrar Venta</div>
       <div class="sale-form">
-        <div class="fg" style="flex:2;min-width:150px"><label class="fl">Usuario Cliente</label><input class="fi" id="apUser" placeholder="usuario_cliente"></div>
+        <div class="fg" style="flex:2;min-width:150px"><label class="fl">Usuario Cliente</label><input class="fi" id="apUser" placeholder="usuario_cliente" onblur="checkFirstPurchase()"></div>
         <div class="fg" style="flex:3;min-width:200px"><label class="fl">Servicio</label>
           <select class="fi" id="apProduct" onchange="fillProduct()"><option value="">— Selecciona servicio —</option></select>
         </div>
