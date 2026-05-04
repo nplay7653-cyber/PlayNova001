@@ -410,22 +410,37 @@ async function loadRewards() {
 // ── ADD POINTS ──
 async function addPoints() {
   const user = document.getElementById('apUser').value.trim();
-  const pid = document.getElementById('apProduct').value;
+  const pid  = document.getElementById('apProduct').value;
   const sale = parseFloat(document.getElementById('apSale').value);
   const cost = parseFloat(document.getElementById('apCost').value);
-  const isFirst = document.getElementById('apFirst').value === 'yes';
-  const mE = document.getElementById('apMsg'); mE.style.color = '#ff6b6b'; mE.textContent = '';
-  if (!user || !pid || isNaN(sale) || isNaN(cost)) { mE.textContent = 'Selecciona usuario y servicio'; return; }
+  const mE   = document.getElementById('apMsg');
+  mE.style.color = '#ff6b6b'; mE.textContent = '';
+
+  if (!user || !pid || isNaN(sale) || isNaN(cost)) {
+    mE.textContent = 'Selecciona usuario y servicio'; return;
+  }
+
   const prod = prods.find(x => x.id === pid);
-  const cR = await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=*`, { headers: HG });
+
+  // Buscar cliente
+  const cR  = await fetch(`${SB}/pn_users?username=eq.${encodeURIComponent(user)}&select=*`, { headers: HG });
   const cls = await cR.json();
   if (!cls.length) { mE.textContent = 'Cliente no encontrado'; return; }
   const client = cls[0];
-  const buyPts = Math.round(sale); let bonusPts = 0, notes = '', refMsg = '';
+
+  // ── AUTO-DETECTAR si es primera compra ──
+  const prevR  = await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(user)}&select=id&limit=1`, { headers: HG });
+  const prev   = await prevR.json();
+  const isFirst = prev.length === 0;
+
+  const buyPts = Math.round(sale);
+  let bonusPts = 0, notes = '', refMsg = '';
+
   if (isFirst) {
-    bonusPts = 30; notes = 'Primera compra · +30 bienvenida';
+    bonusPts = 30;
+    notes    = 'Primera compra · +30 bienvenida';
     if (client.referred_by) {
-      const rR = await fetch(`${SB}/pn_users?id=eq.${client.referred_by}&select=id,points,username`, { headers: HG });
+      const rR   = await fetch(`${SB}/pn_users?id=eq.${client.referred_by}&select=id,points,username`, { headers: HG });
       const refs = await rR.json();
       if (refs.length) {
         const ref = refs[0];
@@ -435,14 +450,20 @@ async function addPoints() {
       }
     }
   }
+
   const total = (client.points || 0) + buyPts + bonusPts;
   await fetch(`${SB}/pn_users?id=eq.${client.id}`, { method: 'PATCH', headers: H, body: JSON.stringify({ points: total }) });
   await fetch(`${SB}/pn_sales`, { method: 'POST', headers: H, body: JSON.stringify({ client_username: user, service_name: prod ? prod.name : 'Servicio', sale_price: sale, cost_price: cost, points_given: buyPts + bonusPts, notes }) });
+
   mE.style.color = 'var(--sp)';
-  mE.textContent = `✓ ${user} tiene ${total} pts (+${buyPts}${bonusPts ? ' +' + bonusPts + ' bienvenida' : ''})${refMsg}`;
-  document.getElementById('apUser').value = ''; document.getElementById('apProduct').value = '';
-  ['apSale', 'apCost', 'apProfit'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('apFirst').value = 'no';
+  mE.textContent = `✓ ${user} tiene ${total} pts (+${buyPts}${bonusPts ? ' +30 bienvenida🎉' : ''})${refMsg}`;
+
+  // Reset form
+  document.getElementById('apUser').value    = '';
+  document.getElementById('apProduct').value = '';
+  ['apSale','apCost','apProfit'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('apFirstBadge').textContent = '—';
+  document.getElementById('apFirstBadge').style.color = 'var(--mu)';
   await loadStats();
 }
 
