@@ -175,7 +175,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 /* ── ADMIN DASHBOARD ── */
 #adminDash{display:none;position:fixed;inset:0;z-index:150;background:var(--bg);}
 #adminDash.open{display:block;}
-.aside{position:fixed;top:0;left:0;width:220px;background:var(--s2);border-right:1px solid var(--b1);display:flex;flex-direction:column;height:100vh;overflow-y:auto;z-index:400;}
+.aside{display:none;position:fixed;top:0;left:0;width:220px;background:var(--s2);border-right:1px solid var(--b1);flex-direction:column;height:100vh;overflow-y:auto;z-index:400;}
+.aside.visible{display:flex;}
 .aside-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--b1);}
 .aside-logo .l{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:2px;}
 .aside-logo .l span{color:var(--ac);}
@@ -981,6 +982,7 @@ async function doLogin(){
 // ── ADMIN ──
 function openAdmin(){
   document.getElementById('adminDash').classList.add('open');
+  document.getElementById('adminAside').classList.add('visible');
   document.getElementById('dashDate').textContent=new Date().toLocaleDateString('es-PE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   loadStats();loadProductsTable();loadProdsDropdown();loadCats();
 }
@@ -1314,6 +1316,7 @@ function copyCode(){
 function closeDash(){
   document.getElementById('adminDash').classList.remove('open');
   document.getElementById('clientDash').classList.remove('open');
+  document.getElementById('adminAside').classList.remove('visible');
   closeAdminSidebar();
   closeSidebar();
   me=null;clearS();
