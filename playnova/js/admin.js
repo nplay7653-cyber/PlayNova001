@@ -489,3 +489,18 @@ window.addEventListener('DOMContentLoaded', async () => {
   await loadStats();
   await loadProdsDropdown();
 });
+
+async function checkFirstPurchase() {
+  const user  = document.getElementById('apUser').value.trim();
+  const badge = document.getElementById('apFirstBadge');
+  if (!user) { badge.textContent = '—'; badge.style.color = 'var(--mu)'; return; }
+  const r    = await fetch(`${SB}/pn_sales?client_username=eq.${encodeURIComponent(user)}&select=id&limit=1`, { headers: HG });
+  const data = await r.json();
+  if (data.length === 0) {
+    badge.textContent = '🎉 1ra compra';
+    badge.style.color = 'var(--go)';
+  } else {
+    badge.textContent = '✓ Recurrente';
+    badge.style.color = 'var(--sp)';
+  }
+}
