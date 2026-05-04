@@ -129,13 +129,9 @@
     </div>
     <div>
       <h3 style="font-family:'Rajdhani',sans-serif;font-size:1.35rem;font-weight:700;margin-bottom:.9rem">Premios disponibles</h3>
-
-      <!-- ── REWARDS DINÁMICOS ── -->
       <div class="rlist" id="indexRewardList">
-        <!-- skeleton mientras carga -->
         <div style="color:var(--mu);font-size:.82rem;padding:.75rem 0;text-align:center;letter-spacing:1px">Cargando premios...</div>
       </div>
-
       <a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20canjear%20mis%20puntos" target="_blank" class="btn btn-go" style="width:100%;margin-top:1.1rem;padding:.65rem;justify-content:center;border-radius:8px;text-decoration:none">💬 Canjear por WhatsApp</a>
     </div>
   </div>
@@ -233,11 +229,13 @@ function swTab(tab){
 function setTab(s){
   document.querySelectorAll('.sgrid').forEach(g=>g.classList.remove('on'));
   document.querySelectorAll('.stab[data-s]').forEach(t=>t.classList.remove('on'));
-  document.getElementById('g-'+s).classList.add('on');
-  document.querySelector(`.stab[data-s="${s}"]`).classList.add('on');
+  const grid = document.getElementById('g-'+s);
+  if(grid) grid.classList.add('on');
+  const tab = document.querySelector(`.stab[data-s="${s}"]`);
+  if(tab) tab.classList.add('on');
 }
 
-// ── REWARDS DINÁMICOS (index) ──
+// ── REWARDS DINÁMICOS ──
 const REWARDS_FALLBACK = [
   { name:'Crunchyroll · 1 Perfil', description:'1 mes · renovable',      points_required:50,  color:'var(--cr)', emoji:'🍊' },
   { name:'HBO Max · 1 Perfil',     description:'1 mes · plan estándar',  points_required:50,  color:'var(--hb)', emoji:'🟣' },
@@ -256,14 +254,13 @@ function renderIndexRewards(rewards) {
   el.innerHTML = rewards.map(r => {
     const color = r.color || 'var(--go)';
     const emoji = r.emoji || '🎁';
-    return `
-      <div class="ritem">
-        <div>
-          <div class="rname" style="color:${color}">${emoji} ${r.name}</div>
-          ${r.description ? `<div class="rdesc">${r.description}</div>` : ''}
-        </div>
-        <div class="rcost">${r.points_required} <small>pts</small></div>
-      </div>`;
+    return `<div class="ritem">
+      <div>
+        <div class="rname" style="color:${color}">${emoji} ${r.name}</div>
+        ${r.description ? `<div class="rdesc">${r.description}</div>` : ''}
+      </div>
+      <div class="rcost">${r.points_required} <small>pts</small></div>
+    </div>`;
   }).join('');
 }
 
@@ -276,6 +273,71 @@ async function loadIndexRewards() {
   } catch(e) {
     renderIndexRewards(REWARDS_FALLBACK);
   }
+}
+
+// ── CAT LOGOS ──
+async function loadCatLogos() {
+  try {
+    const r = await fetch(`${SB}/pn_categories?select=slug,name,image_url,emoji,color&order=name`, { headers: HG });
+    if (!r.ok) return;
+    const cats = await r.json();
+
+    window._catColors = {};
+
+    cats.forEach(cat => {
+      if (!cat.image_url) return;
+      const tab = document.querySelector(`.stab[data-s="${cat.slug}"]`);
+      if (!tab) return;
+
+      window._catColors[cat.slug] = cat.color || 'var(--ac)';
+
+      // Quitar data-s para que el CSS no pinte fondo encima
+      tab.removeAttribute('data-s');
+      tab.setAttribute('data-slug', cat.slug);
+      tab.onclick = () => setTabWithLogo(cat.slug);
+
+      tab.innerHTML = `<img src="${cat.image_url}" alt="${cat.name}"
+        style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px;filter:brightness(0) invert(1)"
+        onerror="this.style.display='none'">${cat.name}`;
+    });
+
+    // Aplicar estilo activo a la tab activa actual
+    applyLogoTabStyles('netflix');
+
+  } catch(e) {
+    console.log('loadCatLogos error:', e);
+  }
+}
+
+function applyLogoTabStyles(activeSlug) {
+  document.querySelectorAll('.stab[data-slug]').forEach(t => {
+    const slug = t.getAttribute('data-slug');
+    const col  = (window._catColors || {})[slug] || 'var(--ac)';
+    if (slug === activeSlug) {
+      t.classList.add('on');
+      t.style.borderColor = col;
+      t.style.color = col;
+      t.style.background = col + '22';
+    } else {
+      t.classList.remove('on');
+      t.style.borderColor = '';
+      t.style.color = '';
+      t.style.background = '';
+    }
+  });
+}
+
+function setTabWithLogo(s) {
+  // Mostrar grid correcto
+  document.querySelectorAll('.sgrid').forEach(g => g.classList.remove('on'));
+  const grid = document.getElementById('g-' + s);
+  if (grid) grid.classList.add('on');
+
+  // Reset tabs normales
+  document.querySelectorAll('.stab[data-s]').forEach(t => t.classList.remove('on'));
+
+  // Estilos para tabs con logo
+  applyLogoTabStyles(s);
 }
 
 // ── REGISTER ──
@@ -320,95 +382,15 @@ async function doLogin(){
   saveS(data[0]);closeModal();window.location.href='client.html';
 }
 
-// ── AUTO-REDIRECT ON LOAD ──
+// ── INIT ──
 window.addEventListener('DOMContentLoaded', () => {
   const saved = loadS();
   if (saved) {
     if (saved.isAdmin) { window.location.href = 'admin.html'; return; }
     window.location.href = 'client.html';
   }
-
   loadIndexRewards();
   loadCatLogos();
-
-
-// ══════════════════════════════════════════════════════
-// FIX: loadCatLogos corregido para index.html
-// REEMPLAZA la función loadCatLogos que ya tienes
-// ══════════════════════════════════════════════════════
-
-async function loadCatLogos() {
-  try {
-    const r = await fetch(`${SB}/pn_categories?select=slug,name,image_url,emoji,color&order=name`, { headers: HG });
-    if (!r.ok) return;
-    const cats = await r.json();
-
-    cats.forEach(cat => {
-      if (!cat.image_url) return;
-      const tab = document.querySelector(`.stab[data-s="${cat.slug}"]`);
-      if (!tab) return;
-
-      // Quitar clase de color de marca (data-s) para que no tape la imagen
-      tab.removeAttribute('data-s');
-      tab.setAttribute('data-slug', cat.slug);
-
-      // Restaurar onclick con el slug correcto
-      tab.onclick = () => setTab(cat.slug);
-
-      // Poner imagen + nombre
-      tab.innerHTML = `
-        <img src="${cat.image_url}" alt="${cat.name}"
-          style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:6px;display:inline-block;filter:brightness(0) invert(1)"
-          onerror="this.style.display='none'">
-        ${cat.name}`;
-
-      // Estilo activo con color de la marca en borde, no fondo
-      tab.style.cssText = '';
-      const color = cat.color || 'var(--ac)';
-
-      // Si esta tab está activa, aplicar borde de color en vez de fondo
-      if (tab.classList.contains('on')) {
-        tab.style.borderColor = color;
-        tab.style.color = color;
-        tab.style.background = `${color}18`;
-      }
-
-      // Override del estado on/off para esta tab
-      const origSetTab = window.setTab;
-      window._catColors = window._catColors || {};
-      window._catColors[cat.slug] = color;
-    });
-
-    // Sobreescribir setTab para manejar tabs con imagen
-    const _orig = window.setTab;
-    window.setTab = function(s) {
-      _orig(s);
-      // Reset todas las tabs con imagen
-      document.querySelectorAll('.stab[data-slug]').forEach(t => {
-        const slug = t.getAttribute('data-slug');
-        const col  = (window._catColors || {})[slug] || 'var(--ac)';
-        if (slug === s) {
-          t.classList.add('on');
-          t.style.borderColor = col;
-          t.style.color = col;
-          t.style.background = col + '18';
-        } else {
-          t.classList.remove('on');
-          t.style.borderColor = '';
-          t.style.color = '';
-          t.style.background = '';
-        }
-      });
-    };
-
-  } catch (e) {
-    console.log('loadCatLogos error:', e);
-  }
-}
-
-// Llamar al cargar la página (después de loadIndexRewards)
-// Modifica el DOMContentLoaded existente para agregar esta llamada:
-// loadCatLogos();   ← agregar esta línea dentro del DOMContentLoaded
 });
 </script>
 </body>
