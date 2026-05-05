@@ -45,55 +45,10 @@
 <section id="servicios" class="wrap sdiv">
   <div class="stitle">Nuestros <span>Servicios</span></div>
   <p class="ssub">Precios competitivos · Renovable · Soporte WhatsApp · Gana puntos en cada compra</p>
-  <div class="svc-tabs">
-    <div class="stab on" data-s="netflix" onclick="setTab('netflix')">Netflix</div>
-    <div class="stab" data-s="hbo" onclick="setTab('hbo')">HBO Max</div>
-    <div class="stab" data-s="disney" onclick="setTab('disney')">Disney+</div>
-    <div class="stab" data-s="chatgpt" onclick="setTab('chatgpt')">ChatGPT</div>
-    <div class="stab" data-s="canva" onclick="setTab('canva')">Canva</div>
-    <div class="stab" data-s="spotify" onclick="setTab('spotify')">Spotify</div>
-    <div class="stab" data-s="directv" onclick="setTab('directv')">DirecTV</div>
-    <div class="stab" data-s="crunchyroll" onclick="setTab('crunchyroll')">Crunchyroll</div>
+  <div class="svc-tabs" id="indexSvcTabs">
+    <div style="color:var(--mu);font-size:.82rem;padding:.5rem">Cargando servicios...</div>
   </div>
-  <div class="sgrid on" id="g-netflix">
-    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><div class="pname">Internacional · Completo</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">48</span><span class="pe">/mes</span></div><div class="ppts">Gana 48 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Completo%205%20perfiles%20S%2F48" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix</span><div class="pname">Internacional · Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%20Internacional%20Perfil%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="netflix"><span class="pbadge" style="background:rgba(229,9,20,.15);color:#ff6b6b">Netflix · Xtreme</span><div class="pname">1 Perfil Xtreme Tec</div><div class="pdesc">1 perfil · Renovable · Xtreme</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Netflix%201%20Perfil%20Xtreme%20Tec%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-hbo">
-    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO Max</span><div class="pname">Estándar · Completo</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">35</span><span class="pe">/mes</span></div><div class="ppts">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Max%20Est%C3%A1ndar%20Completo%20S%2F35" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO Max</span><div class="pname">1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">6</span><span class="pe">/mes</span></div><div class="ppts">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%201%20Perfil%20S%2F6" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="hbo"><span class="pbadge" style="background:rgba(139,0,255,.15);color:#b87fff">HBO · Premium</span><div class="pname">Platino · Completo</div><div class="pdesc">5 perfiles · No renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/mes</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20HBO%20Platino%20Completo%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-disney">
-    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><div class="pname">Estándar · Completo</div><div class="pdesc">7 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">40</span><span class="pe">/mes</span></div><div class="ppts">Gana 40 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Est%C3%A1ndar%20Completo%20S%2F40" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+</span><div class="pname">1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">6</span><span class="pe">/mes</span></div><div class="ppts">Gana 6 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%201%20Perfil%20S%2F6" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · ESPN</span><div class="pname">Premium ESPN · Completo</div><div class="pdesc">7 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">61</span><span class="pe">/mes</span></div><div class="ppts">Gana 61 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Completo%20S%2F61" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · ESPN</span><div class="pname">Premium ESPN · Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Perfil%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="disney"><span class="pbadge" style="background:rgba(0,153,229,.15);color:#6ac8f0">Disney+ · TV</span><div class="pname">Premium ESPN · Solo TV</div><div class="pdesc">1 perfil · Solo TV</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Disney%2B%20Premium%20ESPN%20Solo%20TV%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-chatgpt">
-    <div class="pcard" data-s="chatgpt"><span class="pbadge" style="background:rgba(116,170,156,.15);color:#74aa9c">ChatGPT</span><div class="pname">Go · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/mes</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Go%201%20Perfil%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="chatgpt"><span class="pbadge" style="background:rgba(116,170,156,.15);color:#74aa9c">ChatGPT · Pro</span><div class="pname">Pro · 1 Perfil</div><div class="pdesc">1 perfil · No renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">30</span><span class="pe">/mes</span></div><div class="ppts">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20ChatGPT%20Pro%201%20Perfil%20S%2F30" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-canva">
-    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 1M</span><div class="pname">1 Mes · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">10</span><span class="pe">/mes</span></div><div class="ppts">Gana 10 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%201%20Mes%20S%2F10" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 3M</span><div class="pname">3 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/3 meses</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%203%20Meses%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 6M</span><div class="pname">6 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/6 meses</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%206%20Meses%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="canva"><span class="pbadge" style="background:rgba(125,42,232,.15);color:#b280ff">Canva · 12M</span><div class="pname">12 Meses · 1 Perfil</div><div class="pdesc">1 perfil · Anual</div><div class="pprice"><span class="cy">S/</span><span class="am">30</span><span class="pe">/año</span></div><div class="ppts">Gana 30 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Canva%2012%20Meses%20S%2F30" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-spotify">
-    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify</span><div class="pname">Individual · 1 Mes</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">12</span><span class="pe">/mes</span></div><div class="ppts">Gana 12 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%201%20Mes%20S%2F12" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify · 3M</span><div class="pname">Individual · 3 Meses</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">25</span><span class="pe">/3 meses</span></div><div class="ppts">Gana 25 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Individual%203%20Meses%20S%2F25" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="spotify"><span class="pbadge" style="background:rgba(29,185,84,.15);color:#1DB954">Spotify · Familiar</span><div class="pname">Familiar · 1 Mes</div><div class="pdesc">6 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">35</span><span class="pe">/mes</span></div><div class="ppts">Gana 35 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Spotify%20Familiar%201%20Mes%20S%2F35" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-directv">
-    <div class="pcard" data-s="directv"><span class="pbadge" style="background:rgba(0,153,216,.15);color:#6ac8f0">DirecTV GO</span><div class="pname">DirecTV GO · 1 Perfil</div><div class="pdesc">1 perfil · Renovable · Solo TV</div><div class="pprice"><span class="cy">S/</span><span class="am">20</span><span class="pe">/mes</span></div><div class="ppts">Gana 20 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20DirecTV%20GO%201%20Perfil%20S%2F20" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
-  <div class="sgrid" id="g-crunchyroll">
-    <div class="pcard" data-s="crunchyroll"><span class="pbadge" style="background:rgba(244,117,33,.15);color:#ffaa70">Crunchyroll</span><div class="pname">Perfil · 1 Perfil</div><div class="pdesc">1 perfil · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">5</span><span class="pe">/mes</span></div><div class="ppts">Gana 5 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Perfil%201%20Perfil%20S%2F5" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-    <div class="pcard" data-s="crunchyroll"><span class="pbadge" style="background:rgba(244,117,33,.15);color:#ffaa70">Crunchyroll</span><div class="pname">Completo · 5 Perfiles</div><div class="pdesc">5 perfiles · Renovable</div><div class="pprice"><span class="cy">S/</span><span class="am">15</span><span class="pe">/mes</span></div><div class="ppts">Gana 15 puntos</div><a href="https://wa.me/51924606154?text=Hola%2C%20quiero%20Crunchyroll%20Completo%205%20Perfiles%20S%2F15" target="_blank" class="pbuy">Comprar por WhatsApp</a></div>
-  </div>
+  <div id="indexSvcGrids"></div>
 </section>
 
 <!-- COMBOS -->
@@ -225,14 +180,126 @@ function swTab(tab){
   document.getElementById('mSub').textContent=tab==='login'?'Ingresa a tu cuenta':'Crea tu cuenta (opcional)';
 }
 
-// ── SERVICE TABS ──
-function setTab(s){
-  document.querySelectorAll('.sgrid').forEach(g=>g.classList.remove('on'));
-  document.querySelectorAll('.stab[data-s]').forEach(t=>t.classList.remove('on'));
-  const grid = document.getElementById('g-'+s);
-  if(grid) grid.classList.add('on');
-  const tab = document.querySelector(`.stab[data-s="${s}"]`);
-  if(tab) tab.classList.add('on');
+// ══════════════════════════════════════════
+// ── SERVICIOS DINÁMICOS DESDE LA BD ──
+// ══════════════════════════════════════════
+let _indexCats = [], _indexProds = [], _activeIndexTab = null;
+
+async function loadIndexServices() {
+  try {
+    // Cargar categorías y productos ACTIVOS en paralelo
+    const [catRes, prodRes] = await Promise.all([
+      fetch(`${SB}/pn_categories?select=*&order=name`, { headers: HG }),
+      fetch(`${SB}/pn_products?active=eq.true&select=*&order=category,name`, { headers: HG })
+    ]);
+
+    if (catRes.ok) _indexCats = await catRes.json();
+    if (!prodRes.ok) { renderIndexServicesFallback(); return; }
+    _indexProds = await prodRes.json();
+
+    if (!_indexProds.length) { renderIndexServicesFallback(); return; }
+
+    // Agrupar por categoría
+    const groups = {};
+    _indexProds.forEach(p => {
+      if (!groups[p.category]) groups[p.category] = [];
+      groups[p.category].push(p);
+    });
+
+    const catKeys = Object.keys(groups);
+    if (!catKeys.length) { renderIndexServicesFallback(); return; }
+
+    // Renderizar tabs
+    const tabsEl = document.getElementById('indexSvcTabs');
+    tabsEl.innerHTML = '';
+    catKeys.forEach((cat, i) => {
+      const catObj = _indexCats.find(c => c.slug === cat);
+      const tab = document.createElement('div');
+      tab.className = 'stab' + (i === 0 ? ' on' : '');
+      tab.setAttribute('data-is', cat);
+
+      if (catObj && catObj.image_url) {
+        tab.innerHTML = `<img src="${catObj.image_url}" alt="${catObj.name || cat}"
+          style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px;filter:brightness(0) invert(1)"
+          onerror="this.style.display='none'">${catObj.name || cat}`;
+      } else {
+        const emoji = catObj ? (catObj.emoji || '') : '';
+        const name  = catObj ? catObj.name : (cat.charAt(0).toUpperCase() + cat.slice(1));
+        tab.textContent = emoji + name;
+      }
+
+      tab.onclick = () => showIndexTab(cat);
+      tabsEl.appendChild(tab);
+    });
+
+    // Renderizar grids
+    const gridsEl = document.getElementById('indexSvcGrids');
+    gridsEl.innerHTML = '';
+    catKeys.forEach((cat, i) => {
+      const div = document.createElement('div');
+      div.className = 'sgrid' + (i === 0 ? ' on' : '');
+      div.id = 'ig-' + cat;
+      div.innerHTML = buildIndexGrid(cat, groups[cat]);
+      gridsEl.appendChild(div);
+    });
+
+    _activeIndexTab = catKeys[0];
+
+  } catch (e) {
+    console.error('loadIndexServices error:', e);
+    renderIndexServicesFallback();
+  }
+}
+
+function buildIndexGrid(cat, prods) {
+  const catObj = _indexCats.find(c => c.slug === cat);
+  const color  = catObj ? (catObj.color || 'var(--ac)') : 'var(--ac)';
+  const badgeLabel = catObj ? `${catObj.emoji || ''}${catObj.name}` : cat;
+
+  return prods.map(p => {
+    const waText = encodeURIComponent(`Hola, quiero ${p.name} S/${Number(p.sale_price).toFixed(2)}`);
+    return `<div class="pcard" data-s="${cat}">
+      <span class="pbadge" style="background:${color}22;color:${color}">${badgeLabel}</span>
+      <div class="pname">${p.name}</div>
+      <div class="pdesc">${p.description || ''}</div>
+      <div class="pprice"><span class="cy">S/</span><span class="am">${Number(p.sale_price).toFixed(0)}</span><span class="pe">/mes</span></div>
+      <div class="ppts">Gana ${Math.round(p.sale_price)} puntos</div>
+      <a href="https://wa.me/51924606154?text=${waText}" target="_blank" class="pbuy">Comprar por WhatsApp</a>
+    </div>`;
+  }).join('');
+}
+
+function showIndexTab(cat) {
+  // Tabs
+  document.querySelectorAll('#indexSvcTabs .stab').forEach(t => {
+    t.classList.toggle('on', t.getAttribute('data-is') === cat);
+    // Limpiar estilos inline de logos
+    t.style.borderColor = '';
+    t.style.color = '';
+    t.style.background = '';
+  });
+  // Grids
+  document.querySelectorAll('#indexSvcGrids .sgrid').forEach(g => g.classList.remove('on'));
+  const g = document.getElementById('ig-' + cat);
+  if (g) g.classList.add('on');
+  _activeIndexTab = cat;
+
+  // Color activo para tab con logo
+  const catObj = _indexCats.find(c => c.slug === cat);
+  if (catObj && catObj.color) {
+    const activeTab = document.querySelector(`#indexSvcTabs .stab[data-is="${cat}"]`);
+    if (activeTab) {
+      activeTab.style.background = catObj.color + '22';
+      activeTab.style.borderColor = catObj.color;
+      activeTab.style.color = catObj.color;
+    }
+  }
+}
+
+// Fallback estático si la BD falla
+function renderIndexServicesFallback() {
+  document.getElementById('indexSvcTabs').innerHTML = '<div style="color:#ff6b6b;font-size:.82rem;padding:.5rem">No se pudieron cargar los servicios. <a href="#" onclick="loadIndexServices();return false" style="color:var(--ac)">Reintentar</a></div>';
+  document.getElementById('indexSvcGrids').innerHTML = '';
 }
 
 // ── REWARDS DINÁMICOS ──
@@ -273,71 +340,6 @@ async function loadIndexRewards() {
   } catch(e) {
     renderIndexRewards(REWARDS_FALLBACK);
   }
-}
-
-// ── CAT LOGOS ──
-async function loadCatLogos() {
-  try {
-    const r = await fetch(`${SB}/pn_categories?select=slug,name,image_url,emoji,color&order=name`, { headers: HG });
-    if (!r.ok) return;
-    const cats = await r.json();
-
-    window._catColors = {};
-
-    cats.forEach(cat => {
-      if (!cat.image_url) return;
-      const tab = document.querySelector(`.stab[data-s="${cat.slug}"]`);
-      if (!tab) return;
-
-      window._catColors[cat.slug] = cat.color || 'var(--ac)';
-
-      // Quitar data-s para que el CSS no pinte fondo encima
-      tab.removeAttribute('data-s');
-      tab.setAttribute('data-slug', cat.slug);
-      tab.onclick = () => setTabWithLogo(cat.slug);
-
-      tab.innerHTML = `<img src="${cat.image_url}" alt="${cat.name}"
-        style="width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:5px;filter:brightness(0) invert(1)"
-        onerror="this.style.display='none'">${cat.name}`;
-    });
-
-    // Aplicar estilo activo a la tab activa actual
-    applyLogoTabStyles('netflix');
-
-  } catch(e) {
-    console.log('loadCatLogos error:', e);
-  }
-}
-
-function applyLogoTabStyles(activeSlug) {
-  document.querySelectorAll('.stab[data-slug]').forEach(t => {
-    const slug = t.getAttribute('data-slug');
-    const col  = (window._catColors || {})[slug] || 'var(--ac)';
-    if (slug === activeSlug) {
-      t.classList.add('on');
-      t.style.borderColor = col;
-      t.style.color = col;
-      t.style.background = col + '22';
-    } else {
-      t.classList.remove('on');
-      t.style.borderColor = '';
-      t.style.color = '';
-      t.style.background = '';
-    }
-  });
-}
-
-function setTabWithLogo(s) {
-  // Mostrar grid correcto
-  document.querySelectorAll('.sgrid').forEach(g => g.classList.remove('on'));
-  const grid = document.getElementById('g-' + s);
-  if (grid) grid.classList.add('on');
-
-  // Reset tabs normales
-  document.querySelectorAll('.stab[data-s]').forEach(t => t.classList.remove('on'));
-
-  // Estilos para tabs con logo
-  applyLogoTabStyles(s);
 }
 
 // ── REGISTER ──
@@ -389,8 +391,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (saved.isAdmin) { window.location.href = 'admin.html'; return; }
     window.location.href = 'client.html';
   }
+  loadIndexServices();
   loadIndexRewards();
-  loadCatLogos();
 });
 </script>
 </body>
