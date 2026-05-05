@@ -43,6 +43,28 @@
 /* Copy toast */
 #copyToast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--sp);color:#fff;padding:.5rem 1.1rem;border-radius:8px;font-size:.8rem;font-weight:700;z-index:9999;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;}
 #copyToast.show{opacity:1;transform:translateY(0);}
+
+/* ── LIGHT MODE ── */
+body.light-mode{--bg:#f0f2f5;--s1:#ffffff;--s2:#f8f9fb;--b1:rgba(0,0,0,.08);--b2:rgba(0,0,0,.14);--tx:#1a1a2e;--mu:#6b7280;--ac:#e63329;--go:#d4870a;}
+body.light-mode .aside{box-shadow:2px 0 12px rgba(0,0,0,.08);background:#fff;}
+body.light-mode .dash-topbar{box-shadow:0 1px 4px rgba(0,0,0,.07);background:#fff;}
+body.light-mode .scard{box-shadow:0 1px 4px rgba(0,0,0,.05);}
+body.light-mode .dt tbody tr:hover{background:rgba(0,0,0,.03);}
+body.light-mode .fi{background:#fff;border-color:rgba(0,0,0,.13);color:#1a1a2e;}
+body.light-mode .fi:focus{border-color:var(--ac);}
+body.light-mode .fi::placeholder{color:#9ca3af;}
+body.light-mode select.fi option{background:#fff;color:#1a1a2e;}
+body.light-mode .acc-card{box-shadow:0 1px 4px rgba(0,0,0,.05);}
+body.light-mode .acc-field{background:var(--s2);}
+body.light-mode .amitem{color:#6b7280;}
+body.light-mode .amitem.on{color:var(--ac);}
+body.light-mode .amitem:hover{color:#1a1a2e;}
+body.light-mode .btn-out{color:#1a1a2e;}
+body.light-mode ::-webkit-scrollbar-track{background:#e5e7eb;}
+body.light-mode ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.18);}
+body.light-mode .profit-preview{background:#f3f4f6;}
+.theme-toggle{display:flex;align-items:center;gap:.4rem;background:var(--s1);border:1px solid var(--b2);border-radius:20px;padding:.28rem .75rem;cursor:pointer;font-size:.73rem;font-weight:700;color:var(--mu);transition:all .2s;flex-shrink:0;white-space:nowrap;}
+.theme-toggle:hover{border-color:var(--ac);color:var(--ac);}
 </style>
 </head>
 <body>
@@ -90,6 +112,9 @@
       <div class="dash-topbar-title" id="adminTabTitle">Resumen</div>
     </div>
     <span id="dashDate" style="font-size:.78rem;color:var(--mu)"></span>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">
+      <span id="themeIcon">☀️</span><span id="themeLabel">Claro</span>
+    </button>
   </div>
   <div class="dash-content">
 
@@ -292,8 +317,8 @@
         <input type="hidden" id="accId">
         <div class="acc-form-grid">
           <div class="fg" style="margin:0">
-            <label class="fl">Cliente (usuario) <span style="color:var(--ac)">*</span></label>
-            <input class="fi" id="accClient" placeholder="usuario_cliente" list="accClientList">
+            <label class="fl">Cliente / Nombre <span style="color:var(--mu);font-size:.62rem;font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+            <input class="fi" id="accClient" placeholder="ej: María, Carlos, Juan Pérez..." list="accClientList" autocomplete="off">
             <datalist id="accClientList"></datalist>
           </div>
           <div class="fg" style="margin:0">
@@ -433,11 +458,10 @@ async function saveAcc() {
   const mE      = document.getElementById('accMsg');
   mE.textContent = '';
 
-  if (!client) { mE.textContent = 'El cliente es requerido'; return; }
   if (!service) { mE.textContent = 'Selecciona un servicio'; return; }
 
   const body = {
-    client_username: client,
+    client_username: client || null,
     service,
     email: email || null,
     password: pass || null,
@@ -464,7 +488,7 @@ async function saveAcc() {
         console.log(`
 CREATE TABLE pn_accounts (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  client_username text NOT NULL,
+  client_username text,
   service text NOT NULL,
   email text,
   password text,
@@ -504,7 +528,7 @@ async function loadAccounts() {
           <p style="color:var(--mu);margin-bottom:.75rem">Ejecuta este SQL en tu <strong style="color:var(--tx)">Supabase → SQL Editor</strong>:</p>
           <pre style="background:var(--s2);border-radius:8px;padding:1rem;font-size:.75rem;overflow-x:auto;color:#7dd3fc;border:1px solid rgba(125,211,252,.15)">CREATE TABLE pn_accounts (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  client_username text NOT NULL,
+  client_username text,
   service text NOT NULL,
   email text,
   password text,
@@ -764,6 +788,37 @@ window.loadClients = async function() {
     </tr>`;
   }).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--mu);padding:2rem">Sin clientes</td></tr>';
 };
+
+// ── TEMA CLARO / OSCURO ──────────────────────────────
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light-mode');
+  if (isLight) {
+    document.body.classList.remove('light-mode');
+    document.getElementById('themeIcon').textContent  = '☀️';
+    document.getElementById('themeLabel').textContent = 'Claro';
+    localStorage.setItem('pn_theme', 'dark');
+  } else {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeIcon').textContent  = '🌙';
+    document.getElementById('themeLabel').textContent = 'Oscuro';
+    localStorage.setItem('pn_theme', 'light');
+  }
+}
+
+// Aplicar tema al cargar (default: claro)
+(function() {
+  const saved = localStorage.getItem('pn_theme');
+  if (saved !== 'dark') {
+    document.body.classList.add('light-mode');
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const isLight = document.body.classList.contains('light-mode');
+    const icon  = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (icon)  icon.textContent  = isLight ? '🌙' : '☀️';
+    if (label) label.textContent = isLight ? 'Oscuro' : 'Claro';
+  });
+})();
 </script>
 </body>
 </html>
