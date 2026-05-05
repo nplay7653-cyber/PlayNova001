@@ -163,7 +163,54 @@
     <!-- CLIENTES -->
     <div class="apanel" id="ap-clientes">
       <div class="section-hd">Clientes Registrados</div>
-      <div style="overflow-x:auto"><table class="dt"><thead><tr><th>Usuario</th><th>Teléfono</th><th>Puntos</th><th>Referido</th><th>Código</th><th>Registrado</th><th>Acción</th></tr></thead><tbody id="clientsBody"><tr><td colspan="7" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody></table></div>
+
+      <!-- MODAL CANJE -->
+      <div id="canjeModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+        <div style="background:var(--s2);border:1px solid var(--b2);border-radius:16px;padding:2rem;width:100%;max-width:420px;margin:1rem;position:relative">
+          <button onclick="closeCanjeModal()" style="position:absolute;top:.9rem;right:1.1rem;background:none;border:none;color:var(--mu);font-size:1.5rem;cursor:pointer">×</button>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:.25rem">🎁 Registrar Canje</div>
+          <div id="canjeClientInfo" style="font-size:.8rem;color:var(--mu);margin-bottom:1.25rem"></div>
+          <input type="hidden" id="canjeClientId">
+          <input type="hidden" id="canjeClientUser">
+          <div class="fg">
+            <label class="fl">Premio canjeado</label>
+            <select class="fi" id="canjeRewardSel">
+              <option value="">— Selecciona un premio —</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">O escribe el premio manualmente</label>
+            <input class="fi" id="canjeRewardManual" placeholder="ej: Netflix 1 Perfil 1 mes">
+          </div>
+          <div class="fg">
+            <label class="fl">Puntos a descontar <span style="color:var(--ac)">*</span></label>
+            <input type="number" class="fi" id="canjePts" placeholder="ej: 100" min="1" oninput="updateCanjePrev()">
+          </div>
+          <div id="canjePrev" style="background:var(--s1);border-radius:8px;padding:.7rem 1rem;font-size:.82rem;margin-bottom:.75rem;display:none">
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--mu)">Puntos actuales:</span>
+              <strong id="canjePrevCur" style="color:var(--go)">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:.25rem">
+              <span style="color:var(--mu)">Puntos a descontar:</span>
+              <strong id="canjePrevDes" style="color:#ff6b6b">—</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:.25rem;border-top:1px solid var(--b1);padding-top:.25rem">
+              <span style="color:var(--mu)">Quedarán:</span>
+              <strong id="canjePrevRes" style="color:var(--sp)">—</strong>
+            </div>
+          </div>
+          <div id="canjeMsg" class="ferr" style="margin-bottom:.5rem"></div>
+          <button class="btn btn-red" style="width:100%;padding:.7rem;justify-content:center" onclick="doCanjeAdmin()">Confirmar Canje y Descontar Puntos</button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto">
+        <table class="dt">
+          <thead><tr><th>Usuario</th><th>Teléfono</th><th>Puntos</th><th>Referido</th><th>Código</th><th>Registrado</th><th>Acción</th></tr></thead>
+          <tbody id="clientsBody"><tr><td colspan="7" style="text-align:center;color:var(--mu);padding:2rem">Cargando...</td></tr></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- CATEGORÍAS -->
@@ -510,6 +557,122 @@ function getExpStatus(exp) {
   return { cls:'ok', label:`Vence ${d.toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'})}` };
 }
 
+// ══════════════════════════════════════════════════════
+// ── CANJE DESDE ADMIN ─────────────────────────────────
+// ══════════════════════════════════════════════════════
+let _canjeClient = null;
+let _canjeRewards = [];
+
+async function openCanjeModal(client) {
+  _canjeClient = client;
+  document.getElementById('canjeClientId').value   = client.id;
+  document.getElementById('canjeClientUser').value = client.username;
+  document.getElementById('canjeClientInfo').textContent = `Cliente: ${client.username} · Puntos actuales: ★ ${client.points || 0}`;
+  document.getElementById('canjePts').value          = '';
+  document.getElementById('canjeRewardManual').value = '';
+  document.getElementById('canjeMsg').textContent    = '';
+  document.getElementById('canjePrev').style.display = 'none';
+
+  try {
+    const r = await fetch(`${SB}/pn_rewards?active=eq.true&select=*&order=points_required`, { headers: HG });
+    _canjeRewards = r.ok ? await r.json() : [];
+  } catch(e) { _canjeRewards = []; }
+
+  const sel = document.getElementById('canjeRewardSel');
+  sel.innerHTML = '<option value="">— Selecciona un premio —</option>' +
+    _canjeRewards.map(rw => `<option value="${rw.id}" data-pts="${rw.points_required}">${rw.emoji || '🎁'} ${rw.name} (${rw.points_required} pts)</option>`).join('');
+
+  sel.onchange = () => {
+    const opt = sel.options[sel.selectedIndex];
+    if (opt && opt.dataset.pts) {
+      document.getElementById('canjePts').value = opt.dataset.pts;
+      updateCanjePrev();
+    }
+  };
+
+  document.getElementById('canjeModal').style.display = 'flex';
+}
+
+function closeCanjeModal() {
+  document.getElementById('canjeModal').style.display = 'none';
+  _canjeClient = null;
+}
+
+function updateCanjePrev() {
+  const pts = parseInt(document.getElementById('canjePts').value) || 0;
+  const cur = _canjeClient ? (_canjeClient.points || 0) : 0;
+  const prev = document.getElementById('canjePrev');
+  if (pts > 0) {
+    prev.style.display = 'block';
+    document.getElementById('canjePrevCur').textContent = `★ ${cur}`;
+    document.getElementById('canjePrevDes').textContent = `- ${pts}`;
+    const res = cur - pts;
+    document.getElementById('canjePrevRes').textContent = `★ ${res}`;
+    document.getElementById('canjePrevRes').style.color = res < 0 ? '#ff6b6b' : 'var(--sp)';
+  } else {
+    prev.style.display = 'none';
+  }
+}
+
+async function doCanjeAdmin() {
+  const clientId   = document.getElementById('canjeClientId').value;
+  const clientUser = document.getElementById('canjeClientUser').value;
+  const pts        = parseInt(document.getElementById('canjePts').value);
+  const rewardSel  = document.getElementById('canjeRewardSel').value;
+  const rewardMan  = document.getElementById('canjeRewardManual').value.trim();
+  const mE         = document.getElementById('canjeMsg');
+  mE.style.color   = '#ff6b6b';
+  mE.textContent   = '';
+
+  if (!pts || pts < 1) { mE.textContent = 'Ingresa los puntos a descontar'; return; }
+
+  const cur = _canjeClient ? (_canjeClient.points || 0) : 0;
+  if (pts > cur) { mE.textContent = `El cliente solo tiene ${cur} puntos, no puede canjear ${pts}`; return; }
+
+  let rewardName = rewardMan;
+  if (!rewardName && rewardSel) {
+    const rw = _canjeRewards.find(r => r.id === rewardSel);
+    rewardName = rw ? rw.name : 'Premio canjeado';
+  }
+  if (!rewardName) { mE.textContent = 'Escribe o selecciona el premio'; return; }
+
+  const newPts = cur - pts;
+
+  try {
+    const r1 = await fetch(`${SB}/pn_users?id=eq.${clientId}`, {
+      method: 'PATCH', headers: H,
+      body: JSON.stringify({ points: newPts })
+    });
+    if (!r1.ok) throw new Error('patch');
+
+    await fetch(`${SB}/pn_sales`, {
+      method: 'POST', headers: H,
+      body: JSON.stringify({
+        client_username: clientUser,
+        service_name: `🎁 Canje: ${rewardName}`,
+        sale_price: 0,
+        cost_price: 0,
+        points_given: -pts,
+        notes: `Canje aprobado por admin · -${pts} pts`
+      })
+    });
+
+    if (_canjeClient) _canjeClient.points = newPts;
+    closeCanjeModal();
+    await loadClients();
+    await loadStats();
+
+    const t = document.getElementById('copyToast');
+    t.textContent = `✓ Canje OK · ${clientUser} quedó con ★ ${newPts}`;
+    t.style.background = 'var(--sp)';
+    t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); t.textContent = '¡Copiado!'; }, 3200);
+
+  } catch(e) {
+    mE.textContent = 'Error al procesar el canje. Intenta de nuevo.';
+  }
+}
+
 function copyVal(val, btn) {
   if (!val) return;
   navigator.clipboard.writeText(val).then(() => {
@@ -579,6 +742,28 @@ function renderAccounts() {
     </div>`;
   }).join('');
 }
+
+// ── OVERRIDE loadClients para agregar botón de canje ──
+window.loadClients = async function() {
+  const r = await fetch(`${SB}/pn_users?role=eq.client&select=*&order=created_at.desc`, { headers: HG });
+  const cls = await r.json();
+  const b = document.getElementById('clientsBody');
+  b.innerHTML = cls.length ? cls.map(c => {
+    const clientEsc = JSON.stringify(c).replace(/"/g, '&quot;');
+    return `<tr>
+      <td><strong>${c.username}</strong></td>
+      <td style="color:var(--mu)">${c.phone || '—'}</td>
+      <td><span class="tag tag-y">★ ${c.points}</span></td>
+      <td style="color:var(--mu);font-size:.78rem">${c.referred_by ? '✓ Sí' : '—'}</td>
+      <td style="font-family:monospace;font-size:.78rem;color:var(--go)">${c.referral_code || '—'}</td>
+      <td style="color:var(--mu);font-size:.78rem">${new Date(c.created_at).toLocaleDateString('es-PE')}</td>
+      <td>
+        <button class="btn btn-sm" style="background:rgba(245,166,35,.15);color:var(--go);border:none;white-space:nowrap"
+          onclick='openCanjeModal(${clientEsc})'>🎁 Canjear</button>
+      </td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="text-align:center;color:var(--mu);padding:2rem">Sin clientes</td></tr>';
+};
 </script>
 </body>
 </html>
